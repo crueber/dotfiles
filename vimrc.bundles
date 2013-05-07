@@ -9,10 +9,12 @@ Bundle 'gmarik/vundle'
 
 " Define bundles via Github repos
 Bundle 'croaky/vim-colors-github'
+Bundle 'solarized'
+Bundle 'twilight256.vim'
 Bundle 'danro/rename.vim'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'kien/ctrlp.vim'
-Bundle 'nanki/treetop.vim'
+" Bundle 'nanki/treetop.vim'
 Bundle 'thoughtbot/vim-rspec'
 Bundle 'timcharper/textile.vim'
 Bundle 'tpope/vim-bundler'

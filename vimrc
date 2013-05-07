@@ -1,15 +1,21 @@
-" Leader
 let mapleader = " "
 
-set nocompatible  " Use Vim settings, rather then Vi settings
+set nocompatible
 set nobackup
 set nowritebackup
-set noswapfile    " http://robots.thoughtbot.com/post/18739402579/global-gitignore#comment-458413287
+set noswapfile
 set history=50
-set ruler         " show the cursor position all the time
-set showcmd       " display incomplete commands
-set incsearch     " do incremental searching
-set laststatus=2  " Always display the status line
+set ruler
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set laststatus=2
+set encoding=utf-8
+set showcmd
+set showmode
+set scrolloff=5
+set autoread
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -26,8 +32,8 @@ filetype plugin indent on
 augroup vimrcEx
   au!
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
+"   For all text files set 'textwidth' to 78 characters.
+"  autocmd FileType text setlocal textwidth=78
 
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
@@ -53,8 +59,9 @@ if executable("ag")
 endif
 
 " Color scheme
-colorscheme github
-highlight NonText guibg=#060606
+set background=dark
+colorscheme twilight256
+" highlight NonText guibg=#060606
 highlight Folded  guibg=#0A0A0A guifg=#9090D0
 
 " Numbers
@@ -84,6 +91,8 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 
 " Index ctags from any project, including those outside Rails
 map <Leader>ct :!ctags -R .<CR>
+map <Leader>l :NERDTreeToggle<CR>
+map <Leader>L :NERDTree<CR>
 
 " Cucumber navigation commands
 autocmd User Rails Rnavcommand step features/step_definitions -glob=**/* -suffix=_steps.rb
@@ -91,17 +100,28 @@ autocmd User Rails Rnavcommand config config -glob=**/* -suffix=.rb -default=rou
 
 " Switch between the last two files
 nnoremap <leader><leader> <c-^>
-
-" Get off my lawn
 nnoremap <Left> :echoe "Use h"<CR>
 nnoremap <Right> :echoe "Use l"<CR>
 nnoremap <Up> :echoe "Use k"<CR>
 nnoremap <Down> :echoe "Use j"<CR>
+nnoremap <Leader>s :call RunCurrentSpecFile()<CR>
+"nnoremap <Leader>s :call RunNearestSpec()<CR>
+"nnoremap <Leader>l :call RunLastSpec()<CR>
+nnoremap <Leader>e :e .<CR>
+silent! nnoremap <unique> <silent> <Leader>t :CtrlP<CR>
+silent! nnoremap <unique> <silent> <Leader>b :CtrlPBuffer<CR>
+silent! nnoremap <unique> <silent> <Leader>T :CtrlPTag<CR>
+silent! nnoremap <unique> <silent> <Leader>f :CtrlPFiletype<CR>
 
-" vim-rspec mappings
-nnoremap <Leader>t :call RunCurrentSpecFile()<CR>
-nnoremap <Leader>s :call RunNearestSpec()<CR>
-nnoremap <Leader>l :call RunLastSpec()<CR>
+function! NumberToggle()
+  if(&relativenumber == 1)
+    set number
+  else
+    set relativenumber
+  endif
+endfunc
+
+nnoremap <C-n> :call NumberToggle()<CR>
 
 " Treat <li> and <p> tags like the block tags they are
 let g:html_indent_tags = 'li\|p'
@@ -113,7 +133,7 @@ au BufRead,BufNewFile *.md set filetype=markdown
 au BufRead,BufNewFile *.md setlocal spell
 
 " Automatically wrap at 80 characters for Markdown
-au BufRead,BufNewFile *.md setlocal textwidth=80
+" au BufRead,BufNewFile *.md setlocal textwidth=80
 
 " Open new split panes to right and bottom, which feels more natural
 set splitbelow
