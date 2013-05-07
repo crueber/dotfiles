@@ -1,3 +1,13 @@
+[user]
+        name = Chris Rueber
+        email = crueber@gmail.com
+[difftool "sourcetree"]
+        cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --nosplash \"$LOCAL\" \"$REMOTE\"
+[mergetool "sourcetree"]
+        cmd = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+        trustExitCode = true
+[github]
+        user = crueber
 [push]
   default = upstream
 [color]
@@ -16,6 +26,7 @@
   st = status
 [core]
   excludesfile = ~/.gitignore
+  excludesfile = /Users/crueber/.gitignore_global
   autocrlf = input
 [merge]
   ff = only

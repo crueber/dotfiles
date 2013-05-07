@@ -11,51 +11,13 @@ Set zsh as your login shell.
 Install
 -------
 
-Clone onto your laptop:
+Clone:
 
-    git clone git://github.com/thoughtbot/dotfiles.git
-
-(Or, [fork and keep your fork
-updated](http://robots.thoughtbot.com/post/5133345960)).
-
-Install:
-
+    git clone git://github.com/crueber/dotfiles.git
     cd dotfiles
     ./install.sh
 
-This will create symlinks for config files in your home directory. If you
-include the line "DO NOT EDIT BELOW THIS LINE" anywhere in a config file, it
-will copy that file over instead of symlinking it, and it will leave
-everything above that line in your local config intact.
-
-You can safely run `./install.sh` multiple times to update.
-
-Make your own customizations
-----------------------------
-
-Put your customizations at the top of files, separated by "DO NOT EDIT BELOW
-THIS LINE."
-
-For example, the top of your `~/.gitconfig` might look like this:
-
-    [user]
-      name = Joe Ferris
-      email = jferris@thoughtbot.com
-
-    # DO NOT EDIT BELOW THIS LINE
-
-    [push]
-      default = current
-
-The top of your `~/.zlogin` might look like this:
-
-    # Productivity
-    alias todo='$EDITOR ~/.todo'
-
-    # DO NOT EDIT BELOW THIS LINE
-
-    # recommended by brew doctor
-    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+This will create symlinks for config files in your home directory. 
 
 What's in it?
 -------------
@@ -74,7 +36,6 @@ What's in it?
 * Use [Ag](https://github.com/ggreer/the_silver_searcher) instead of Grep when
   available.
 * Use [Exuberant Ctags](http://ctags.sourceforge.net/) for tab completion.
-* Use [GitHub color scheme](https://github.com/croaky/vim-colors-github).
 * Use [Vundle](https://github.com/gmarik/vundle) to manage plugins.
 
 [tmux](http://robots.thoughtbot.com/post/2641409235/a-tmux-crash-course)
@@ -116,12 +77,6 @@ Shell aliases and scripts:
 Credits
 -------
 
-Thank you, [contributors](https://github.com/thoughtbot/dotfiles/contributors)!
+This dotfiles repository is maintained by [@crueber](http://www.twitter.com/crueber)
 
-![thoughtbot](http://thoughtbot.com/images/tm/logo.png)
-
-Dotfiles is maintained by [thoughtbot, inc](http://thoughtbot.com/community)
-The names and logos for thoughtbot are trademarks of thoughtbot, inc.
-
-Dotfiles is © 2009-2013 thoughtbot, inc. It is free software and may be
-redistributed under the terms specified in the [LICENSE](LICENSE) file.
+Original dotfiles repository concept and basis taken from [ThoughtBot Dotfiles Repository](https://github.com/thoughtbot/dotfiles)
