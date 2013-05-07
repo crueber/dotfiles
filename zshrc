@@ -1,70 +1,37 @@
-# load our own completion functions
-fpath=(~/.zsh/completion $fpath)
 
-# completion
-autoload -U compinit
-compinit
+ZSH=$HOME/.oh-my-zsh
+ZSH_THEME="chrisrueber" # or: gallois
 
-for function in ~/.zsh/functions/*; do
-  source $function
-done
+alias novustaging='ssh crueber@sae1ca01.novu.com'
 
-# automatically enter directories without cd
-setopt auto_cd
+# DISABLE_AUTO_UPDATE="true"
+# DISABLE_LS_COLORS="true"
+# DISABLE_AUTO_TITLE="true"
+COMPLETION_WAITING_DOTS="true"
 
-# use vim as the visual editor
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=(bundler gem zeus heroku jruby node osx rake rails3 rvm ruby sublime redis-cli history-substring-search)
+
+source $ZSH/oh-my-zsh.sh
+
+# Customize to your needs...
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+# export EDITOR='subl -w'
 export VISUAL=vim
 export EDITOR=$VISUAL
-
-# aliases
-if [ -e "$HOME/.aliases" ]; then
-  source "$HOME/.aliases"
-fi
-
-# vi mode
-bindkey -v
-bindkey "^F" vi-cmd-mode
-bindkey jj vi-cmd-mode
-
-# use incremental search
-bindkey "^R" history-incremental-search-backward
-
-# add some readline keys back
-bindkey "^A" beginning-of-line
-bindkey "^E" end-of-line
-
-# handy keybindings
-bindkey "^P" history-search-backward
-bindkey "^Y" accept-and-hold
-bindkey "^N" insert-last-word
-bindkey -s "^T" "^[Isudo ^[A" # "t" for "toughguy"
-
-# expand functions in the prompt
-setopt prompt_subst
-
-# prompt
-export PS1='[${SSH_CONNECTION+"%n@%m:"}%~] '
-
-# ignore duplicate history entries
-setopt histignoredups
-
-# keep TONS of history
+export rvm_install_on_use_flag=1
+export SHELL=/usr/local/bin/zsh
 export HISTSIZE=4096
-
-# look for ey config in project dirs
-export EYRC=./.eyrc
-
-# automatically pushd
+setopt auto_cd
 setopt auto_pushd
 export dirstacksize=5
 
-# awesome cd movements from zshkit
-setopt AUTOCD
-setopt AUTOPUSHD PUSHDMINUS PUSHDSILENT PUSHDTOHOME
-setopt cdablevars
+PATH=$PATH:$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:$HOME/Development/phantomjs-1.7.0/bin
 
-# Try to correct command line spelling
-setopt CORRECT CORRECT_ALL
+rvm use default
 
-# Enable extended globbing
-setopt EXTENDED_GLOB
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
