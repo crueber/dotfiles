@@ -16,6 +16,12 @@ set showcmd
 set showmode
 set scrolloff=5
 set autoread
+set cc=130
+" hi ColorColumn ctermbg=lightblue guibg=lightblue
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set list listchars=tab:»·,trail:·
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -44,16 +50,6 @@ augroup vimrcEx
     \ endif
 augroup END
 
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
-set expandtab
-
-" Display extra whitespace
-set list listchars=tab:»·,trail:·
-
-" Use Ag (https://github.com/ggreer/the_silver_searcher) instead of Grep when
-" available
 if executable("ag")
   set grepprg=ag\ --nogroup\ --nocolor
 endif
@@ -63,6 +59,7 @@ set background=dark
 colorscheme twilight256
 " highlight NonText guibg=#060606
 highlight Folded  guibg=#0A0A0A guifg=#9090D0
+highlight ColorColumn ctermbg=darkgray guibg=#ADD8E6
 
 " Numbers
 set number
