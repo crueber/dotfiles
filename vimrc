@@ -17,11 +17,11 @@ set showmode
 set scrolloff=5
 set autoread
 set cc=130
-" hi ColorColumn ctermbg=lightblue guibg=lightblue
 set tabstop=2
 set shiftwidth=2
 set expandtab
 set list listchars=tab:»·,trail:·
+set synmaxcol=800
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -134,10 +134,16 @@ au BufRead,BufNewFile *.md setlocal spell
 " au BufRead,BufNewFile *.md setlocal textwidth=80
 
 " Open new split panes to right and bottom, which feels more natural
-set splitbelow
 set splitright
+set splitbelow
 
 " Local config
 if filereadable($HOME . "/.vimrc.local")
   source ~/.vimrc.local
+endif
+
+if has("statusline") && !&cp
+  set statusline=%f\ %m\ %r     " filename, modified, readonly
+  set statusline+=%{fugitive#statusline()}
+  set statusline+=\ %l/%L[%p%%] " current line/total lines
 endif
