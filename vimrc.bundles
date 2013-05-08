@@ -9,7 +9,7 @@ Bundle 'gmarik/vundle'
 
 " Define bundles via Github repos
 Bundle 'croaky/vim-colors-github'
-Bundle 'solarized'
+Bundle 'Solarized'
 Bundle 'twilight256.vim'
 Bundle 'danro/rename.vim'
 Bundle 'kchmck/vim-coffee-script'
