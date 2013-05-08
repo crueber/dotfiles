@@ -30,8 +30,6 @@ export dirstacksize=5
 
 PATH=$PATH:$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:$HOME/Development/phantomjs-1.7.0/bin
 
-rvm use default
-
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
