@@ -34,5 +34,9 @@ for name in *; do
   fi
 done
 
+if [ -e "$HOME/.oh-my-zsh/themes" ]; then
+  cp $PWD/zsh-themes/* "$HOME/.oh-my-zsh/themes/"
+fi
+
 git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 vim -u ~/.vimrc.bundles +BundleInstall +qa
