@@ -1,8 +1,9 @@
 
 ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="gallois" #"chrisrueber" # or: gallois
+ZSH_THEME="chrisrueber" # or: gallois
 
 alias novustaging='ssh crueber@sae1ca01.novu.com'
+alias aws='~/Dropbox/aws.sh'
 
 # DISABLE_AUTO_UPDATE="true"
 # DISABLE_LS_COLORS="true"
@@ -16,8 +17,6 @@ plugins=(bundler gem zeus heroku jruby node osx rake rails3 rvm ruby sublime red
 
 source $ZSH/oh-my-zsh.sh
 
-# Customize to your needs...
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 # export EDITOR='subl -w'
 export VISUAL=vim
 export EDITOR=$VISUAL
@@ -28,8 +27,10 @@ setopt auto_cd
 setopt auto_pushd
 export dirstacksize=5
 
-PATH=$PATH:$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:$HOME/Development/phantomjs-1.7.0/bin
+PATH=$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+rvm default
 
