@@ -1,12 +1,10 @@
 thoughtbot dotfiles
 ===================
 
-Requirements
-------------
+Prerequisites
+-------------
 
-Set zsh as your login shell.
-
-    chsh -s /bin/zsh
+You need to have the following installed: zsh, oh-my-zsh, vim, ag, tmux, and git.
 
 Install
 -------
