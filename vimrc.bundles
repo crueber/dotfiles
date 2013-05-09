@@ -32,5 +32,6 @@ Bundle 'xenoterracide/html.vim'
 Bundle 'Tabular'
 Bundle 'surround.vim'
 Bundle 'ruby.vim'
+Bundle 'snipMate'
 
 filetype on

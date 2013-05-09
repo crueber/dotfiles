@@ -4,6 +4,8 @@ set nocompatible
 set nobackup
 set nowritebackup
 set noswapfile
+set noerrorbells
+set visualbell
 set history=50
 set ruler
 set incsearch
@@ -72,6 +74,7 @@ let g:snippetsEmu_key = "<S-Tab>"
 " will insert tab at beginning of line,
 " will use completion if not at beginning
 set wildmode=list:longest,list:full
+set wildignore=*.swp,*.bak,*.pyc,*.log,*.class
 set complete=.,w,t
 function! InsertTabWrapper()
     let col = col('.') - 1
