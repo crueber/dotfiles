@@ -27,7 +27,7 @@
   st = status
 [core]
   excludesfile = ~/.gitignore
-  excludesfile = /Users/crueber/.gitignore_global
+  excludesfile = ~/.gitignore_global
   autocrlf = input
 [merge]
   ff = only
