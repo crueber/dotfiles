@@ -113,6 +113,8 @@ silent! nnoremap <unique> <silent> <Leader>t :CtrlP<CR>
 silent! nnoremap <unique> <silent> <Leader>b :CtrlPBuffer<CR>
 silent! nnoremap <unique> <silent> <Leader>T :CtrlPTag<CR>
 silent! nnoremap <unique> <silent> <Leader>f :CtrlPFiletype<CR>
+nnoremap ; :
+inoremap jj <esc>
 
 function! NumberToggle()
   if(&relativenumber == 1)
