@@ -109,6 +109,7 @@ nnoremap <Leader>s :call RunCurrentSpecFile()<CR>
 "nnoremap <Leader>l :call RunLastSpec()<CR>
 nnoremap <Leader>e :e .<CR>
 nnoremap <Leader>a :Tabularize /:/l0l1
+nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 silent! nnoremap <unique> <silent> <Leader>t :CtrlP<CR>
 silent! nnoremap <unique> <silent> <Leader>b :CtrlPBuffer<CR>
 silent! nnoremap <unique> <silent> <Leader>T :CtrlPTag<CR>
