@@ -1,5 +1,11 @@
 let mapleader = " "
 
+if filereadable(expand("~/.vimrc.bundles"))
+  source ~/.vimrc.bundles
+endif
+
+filetype plugin indent on
+
 set nocompatible
 set nobackup
 set nowritebackup
@@ -24,25 +30,21 @@ set shiftwidth=2
 set expandtab
 set list listchars=tab:»·,trail:·
 set synmaxcol=800
+set splitright
+set splitbelow
+set background=dark
+set number
+set numberwidth=5
+set wildmode=list:longest,list:full
+set wildignore=*.swp,*.bak,*.pyc,*.log,*.class
+set complete=.,w,t
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
 
-if filereadable(expand("~/.vimrc.bundles"))
-  source ~/.vimrc.bundles
-endif
-
-filetype plugin indent on
-
 augroup vimrcEx
   au!
-
-"   For all text files set 'textwidth' to 78 characters.
-"  autocmd FileType text setlocal textwidth=78
-
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
   " (happens when dropping a file on gvim).
@@ -52,30 +54,15 @@ augroup vimrcEx
     \ endif
 augroup END
 
+colorscheme twilight256
+highlight NonText guibg=#060606
+highlight Folded  guibg=#0A0A0A guifg=#9090D0
+highlight ColorColumn ctermbg=darkgray guibg=#ADD8E6
+
 if executable("ag")
   set grepprg=ag\ --nogroup\ --nocolor
 endif
 
-" Color scheme
-set background=dark
-colorscheme twilight256
-" highlight NonText guibg=#060606
-highlight Folded  guibg=#0A0A0A guifg=#9090D0
-highlight ColorColumn ctermbg=darkgray guibg=#ADD8E6
-
-" Numbers
-set number
-set numberwidth=5
-
-" Snippets are activated by Shift+Tab
-let g:snippetsEmu_key = "<S-Tab>"
-
-" Tab completion
-" will insert tab at beginning of line,
-" will use completion if not at beginning
-set wildmode=list:longest,list:full
-set wildignore=*.swp,*.bak,*.pyc,*.log,*.class
-set complete=.,w,t
 function! InsertTabWrapper()
     let col = col('.') - 1
     if !col || getline('.')[col - 1] !~ '\k'
@@ -84,38 +71,6 @@ function! InsertTabWrapper()
         return "\<c-p>"
     endif
 endfunction
-inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
-
-" Exclude Javascript files in :Rtags via rails.vim due to warnings when parsing
-let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
-
-" Index ctags from any project, including those outside Rails
-map <Leader>ct :!ctags -R .<CR>
-map <Leader>l :NERDTreeToggle<CR>
-map <Leader>L :NERDTree<CR>
-
-" Cucumber navigation commands
-autocmd User Rails Rnavcommand step features/step_definitions -glob=**/* -suffix=_steps.rb
-autocmd User Rails Rnavcommand config config -glob=**/* -suffix=.rb -default=routes
-
-" Switch between the last two files
-nnoremap <leader><leader> <c-^>
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>
-nnoremap <Leader>s :call RunCurrentSpecFile()<CR>
-"nnoremap <Leader>s :call RunNearestSpec()<CR>
-"nnoremap <Leader>l :call RunLastSpec()<CR>
-nnoremap <Leader>e :e .<CR>
-nnoremap <Leader>a :Tabularize /:/l0l1
-nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
-silent! nnoremap <unique> <silent> <Leader>t :CtrlP<CR>
-silent! nnoremap <unique> <silent> <Leader>b :CtrlPBuffer<CR>
-silent! nnoremap <unique> <silent> <Leader>T :CtrlPTag<CR>
-silent! nnoremap <unique> <silent> <Leader>f :CtrlPFiletype<CR>
-nnoremap ; :
-inoremap jj <esc>
 
 function! NumberToggle()
   if(&relativenumber == 1)
@@ -125,31 +80,50 @@ function! NumberToggle()
   endif
 endfunc
 
-nnoremap <C-n> :call NumberToggle()<CR>
-
-" Treat <li> and <p> tags like the block tags they are
+" Exclude Javascript files in :Rtags via rails.vim due to warnings when parsing
+let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 let g:html_indent_tags = 'li\|p'
+" Snippets are activated by Shift+Tab
+let g:snippetsEmu_key = "<S-Tab>"
+
+autocmd User Rails Rnavcommand step features/step_definitions -glob=**/* -suffix=_steps.rb
+autocmd User Rails Rnavcommand config config -glob=**/* -suffix=.rb -default=routes
+
+" Index ctags from any project, including those outside Rails
+map <Leader>ct :!ctags -R .<CR>
+" Switch between the last two files
+nnoremap <Leader><Leader> <c-^>
+nnoremap <Left> :echoe "Use h"<CR>
+nnoremap <Right> :echoe "Use l"<CR>
+nnoremap <Up> :echoe "Use k"<CR>
+nnoremap <Down> :echoe "Use j"<CR>
+nnoremap <Leader>s :call RunCurrentSpecFile()<CR>
+"nnoremap <Leader>s :call RunNearestSpec()<CR>
+"nnoremap <Leader>l :call RunLastSpec()<CR>
+nnoremap <Leader>e :e .<CR>
+nnoremap <Leader>a :Tabularize /:/l0l1
+nnoremap <Leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+nnoremap <C-n> :call NumberToggle()<CR>
+silent! nnoremap <unique> <silent> <Leader>t :CtrlP<CR>
+silent! nnoremap <unique> <silent> <Leader>b :CtrlPBuffer<CR>
+silent! nnoremap <unique> <silent> <Leader>T :CtrlPTag<CR>
+silent! nnoremap <unique> <silent> <Leader>f :CtrlPFiletype<CR>
+nnoremap ; :
+inoremap jj <esc>
+inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
 
 " Set syntax highlighting for specific file types
 au BufRead,BufNewFile *.md set filetype=markdown
-
 " Enable spellchecking for Markdown
 au BufRead,BufNewFile *.md setlocal spell
 
-" Automatically wrap at 80 characters for Markdown
-" au BufRead,BufNewFile *.md setlocal textwidth=80
+if has("statusline") && !&cp
+  set statusline=%{fugitive#statusline()}
+  set statusline+=\ %l/%L[%p%%]    " current line/total lines
+  set statusline+=\ %f\ %m\ %r     " filename, modified, readonly
+endif
 
-" Open new split panes to right and bottom, which feels more natural
-set splitright
-set splitbelow
-
-" Local config
 if filereadable($HOME . "/.vimrc.local")
   source ~/.vimrc.local
 endif
 
-if has("statusline") && !&cp
-  set statusline=%f\ %m\ %r     " filename, modified, readonly
-  set statusline+=%{fugitive#statusline()}
-  set statusline+=\ %l/%L[%p%%] " current line/total lines
-endif
