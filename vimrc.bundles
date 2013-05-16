@@ -34,5 +34,6 @@ Bundle 'Tabular'
 Bundle 'surround.vim'
 Bundle 'ruby.vim'
 Bundle 'snipMate'
+Bundle 'The-NERD-tree'
 
 filetype on

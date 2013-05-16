@@ -12,3 +12,9 @@ if filereadable($HOME . "/.gvimrc.local")
   source ~/.gvimrc.local
 endif
 
+set bg=dark
+if &background == "dark"
+  hi normal guibg=black
+  set transp=8
+endif
+
