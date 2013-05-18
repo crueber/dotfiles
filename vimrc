@@ -43,6 +43,8 @@ if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
 endif
 
+autocmd vimenter * if !argc() | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 augroup vimrcEx
   au!
   " When editing a file, always jump to the last known cursor position.
@@ -85,6 +87,7 @@ let g:Tlist_Ctags_Cmd="ctags --exclude='*.js'"
 let g:html_indent_tags = 'li\|p'
 " Snippets are activated by Shift+Tab
 let g:snippetsEmu_key = "<S-Tab>"
+let g:NERDTreeChDirMode=2
 
 autocmd User Rails Rnavcommand step features/step_definitions -glob=**/* -suffix=_steps.rb
 autocmd User Rails Rnavcommand config config -glob=**/* -suffix=.rb -default=routes
@@ -109,6 +112,7 @@ silent! nnoremap <unique> <silent> <Leader>b :CtrlPBuffer<CR>
 silent! nnoremap <unique> <silent> <Leader>T :CtrlPTag<CR>
 silent! nnoremap <unique> <silent> <Leader>f :CtrlPFiletype<CR>
 nnoremap ; :
+nnoremap <Leader>n :NERDTreeToggle<CR>
 inoremap jj <esc>
 inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
 
