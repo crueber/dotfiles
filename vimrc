@@ -38,6 +38,7 @@ set numberwidth=5
 set wildmode=list:longest,list:full
 set wildignore=*.swp,*.bak,*.pyc,*.log,*.class
 set complete=.,w,t
+set clipboard=unnamed
 
 if (&t_Co > 2 || has("gui_running")) && !exists("syntax_on")
   syntax on
