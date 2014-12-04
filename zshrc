@@ -27,10 +27,8 @@ setopt auto_cd
 setopt auto_pushd
 export dirstacksize=5
 
-PATH=$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
+PATH=node_modules/.bin:$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
-
-rvm default
 
