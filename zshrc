@@ -2,8 +2,7 @@
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="chrisrueber" # or: gallois
 
-alias novustaging='ssh crueber@sae1ca01.novu.com'
-alias packden="$HOME/Dropbox/aws.sh"
+alias packden="$HOME/Dropbox/packden.sh"
 
 # DISABLE_AUTO_UPDATE="true"
 # DISABLE_LS_COLORS="true"
@@ -27,7 +26,7 @@ setopt auto_cd
 setopt auto_pushd
 export dirstacksize=5
 
-PATH=node_modules/.bin:$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
+export PATH="node_modules/.bin:$HOME/.rvm/bin:$HOME/bin:/usr/local/share/npm/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
