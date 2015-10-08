@@ -1,6 +1,7 @@
 
 ZSH=$HOME/.oh-my-zsh
-ZSH_THEME="chrisrueber" # or: gallois
+#ZSH_THEME="chrisrueber" # or: gallois
+ZSH_THEME="agnoster" # or: gallois
 
 alias packden="$HOME/Dropbox/packden.sh"
 
