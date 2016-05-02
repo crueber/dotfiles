@@ -11,7 +11,7 @@ else
   fi
 fi
 if which nvm_prompt_info &> /dev/null; then
-  nvm='%{$fg[green]%}‹node-$(nvm_prompt_info)›%{$reset_color%}'
+  nvm='%{$fg[green]%}‹nvm-$(nvm_prompt_info)›%{$reset_color%}'
 fi
 local return_code='%(?..%{$fg[red]%}%? ↵%{$reset_color%})'
 local git_branch='$(git_prompt_status)%{$reset_color%}$(git_prompt_info)%{$reset_color%}'
