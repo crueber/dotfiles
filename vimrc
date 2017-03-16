@@ -107,13 +107,17 @@ nnoremap <Leader>s :call RunCurrentSpecFile()<CR>
 nnoremap <Leader>e :e .<CR>
 nnoremap <Leader>a :Tabularize /:/l0l1
 nnoremap <Leader>W :%s/\s\+$//<cr>:let @/=''<CR>
-nnoremap <C-n> :call NumberToggle()<CR>
+nnoremap <Leader># :call NumberToggle()<CR>
 silent! nnoremap <unique> <silent> <Leader>t :CtrlP<CR>
 silent! nnoremap <unique> <silent> <Leader>b :CtrlPBuffer<CR>
 silent! nnoremap <unique> <silent> <Leader>T :CtrlPTag<CR>
 silent! nnoremap <unique> <silent> <Leader>f :CtrlPFiletype<CR>
 nnoremap ; :
 nnoremap <Leader>n :NERDTreeToggle<CR>
+nnoremap <Leader>h <C-W><C-h>
+nnoremap <Leader>k <C-W><C-k>
+nnoremap <Leader>j <C-W><C-j>
+nnoremap <Leader>l <C-W><C-l>
 inoremap jj <esc>
 inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
 
