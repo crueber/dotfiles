@@ -10,4 +10,3 @@ tmp/**/*
 !tmp/cache/.keep
 vendor/bundler_gems
 vim/.netrwhist
-zeus.json
