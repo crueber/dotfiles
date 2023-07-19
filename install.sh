@@ -23,7 +23,7 @@ for name in *; do
       fi
     fi
   else
-    if [ "$name" != 'install.sh' ] && [ "$name" != 'README.md' ] && [ "$name" != 'LICENSE' ]; then
+    if [ "$name" != 'install.sh' ] && [ "$name" != 'README.md' ] && [ "$name" != 'LICENSE' && [ "$name" != "nvim-custom" ]]; then
       echo "Creating $target"
       if [ -n "$(grep "$cutstring" "$name")" ]; then
         cp "$PWD/$name" "$target"
@@ -38,5 +38,18 @@ if [ -e "$HOME/.oh-my-zsh/themes" ]; then
   cp $PWD/zsh-themes/* "$HOME/.oh-my-zsh/themes/"
 fi
 
-git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-vim -u ~/.vimrc.bundles +BundleInstall +qa
+NVIM="$HOME/.config/nvim"
+if [ -e "$NVIM" ] && [ ! -e "$NVIM/.git" ]; then
+  echo "Removing $NVIM because it is not a git repo."
+  rm -rf $NVIM
+fi
+if [ ! -e "$NVIM" ]; then
+  echo "Cloning in to nvChad at $NVIM."
+  git clone https://github.com/nvchad/nvchad "$NVIM" --depth 1
+fi
+if [ -e "$NVIM/lua/custom" ]; then 
+  echo "Removing $NVIM/lua/custom and copying custom files."
+  rm -rf "$NVIM/lua/custom"
+  cp -r nvim-custom "$NVIM/lua/custom"
+fi 
+
