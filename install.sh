@@ -47,9 +47,12 @@ if [ ! -e "$NVIM" ]; then
   echo "Cloning in to nvChad at $NVIM."
   git clone https://github.com/nvchad/nvchad "$NVIM" --depth 1
 fi
-if [ -e "$NVIM/lua/custom" ]; then 
-  echo "Removing $NVIM/lua/custom and copying custom files."
-  rm -rf "$NVIM/lua/custom"
+if [ -e "$NVIM/lua" ]; then 
+  if [ -e "$NVIM/lua/custom " ]; then
+    echo "Removing $NVIM/lua/custom."
+    rm -rf "$NVIM/lua/custom"
+  fi
+  echo "Copying custom lua scripts for nvim in to $NVIM/lua/custom"
   cp -r nvim-custom "$NVIM/lua/custom"
 fi 
 
