@@ -48,7 +48,7 @@ if [ ! -e "$NVIM" ]; then
   git clone https://github.com/nvchad/nvchad "$NVIM" --depth 1
 fi
 if [ -e "$NVIM/lua" ]; then 
-  if [ -e "$NVIM/lua/custom " ]; then
+  if [ -e "$NVIM/lua/custom" ]; then
     echo "Removing $NVIM/lua/custom."
     rm -rf "$NVIM/lua/custom"
   fi
