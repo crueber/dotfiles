@@ -1,15 +1,12 @@
 #!/bin/bash
 
-required_binaries=('zsh' 'awk' 'sed' 'nvim' 'gdu' 'htop' 'btop' 'node' 'deno' 'ruby' 'go' 'ag' 'exa' 'bat' 'lazygit' 'tig')
+required_binaries=('zsh' 'awk' 'sed' 'nvim' 'gdu' 'htop' 'btop' 'node' 'deno' 'ruby' 'go' 'ag' 'exa' 'bat' 'lg' 'tig')
 
 available_binaries=''
 missing_binaries=''
 
 for binary in "${required_binaries[@]}"; do
-
-  bin_condition=$(which ${binary} 2>&1)
-
-  if [[ "$bin_condition" =~ ^which.*$ ]]; then
+  if ! command -v $binary &> /dev/null && ! type $binary >/dev/null 2>&1; then
     missing_binaries+=" $binary"
   else
     available_binaries+=" $binary"
