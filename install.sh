@@ -59,3 +59,13 @@ if [ -e "$NVIM/lua" ]; then
   cp -r nvim-custom "$NVIM/lua/custom"
 fi 
 
+cmds=('zsh' 'nvim' 'node' 'deno' 'ruby' 'go' 'ag')
+for cmd in "${cmds[@]}"; do
+  cmdwhich=$(which ${cmd} 2>&1)
+  if [[ "$cmdwhich" =~ ^which.*$ ]]; then
+    echo "WARNING: $cmd is unavailable!"
+  else
+    echo "INFO: $cmd is available"
+  fi
+done
+
