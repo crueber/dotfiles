@@ -1,0 +1,14 @@
+
+alias vim=nvim
+alias lg=lazygit
+alias cat=bat
+alias ls="exa --icons"
+alias ll="exa --icons -al"
+alias z=zathura
+alias mkdir="mkdir -p"
+alias e="$EDITOR"
+alias v="$VISUAL"
+
+# Path aliases and updates
+export PATH="$PATH:$HOME/.bin:$HOME/bin:node_modules/.bin/usr/local/bin"
+

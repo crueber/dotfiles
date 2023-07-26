@@ -7,14 +7,18 @@ link () {
   if [ -L "$target" ]; then
     echo "INFO: $target symlink exists."
   elif [ -e "$target" ] && [ ! -L "$target" ]; then
-    echo "WARNING: $target exists but is not symlinked."
+    echo "WARNING: $target exists but is not symlinked. Moving to .bak and symlinking."
+    mv "$target" "$target.bak"
+
+    echo "$name to $target"
+    ln -s "$PWD/$name" "$target"
   else
     echo "Symlinking '$name' to '$target'"
-    ln -s "$name" "$target"
+    ln -s "$PWD/$name" "$target"
   fi
 }
 
-skip=('config' 'install.sh' 'README.md' 'LICENSE' 'nvim-custom' 'zsh-themes')
+skip=('config' 'install.sh' 'check_binaries.sh' 'README.md' 'LICENSE' 'nvim-custom' 'zsh-themes')
 for name in *; do
   if [[ " ${skip[*]} " =~ " ${name} " ]]; then
     continue
@@ -59,14 +63,5 @@ if [ -e "$NVIM/lua" ]; then
   cp -r nvim-custom "$NVIM/lua/custom"
 fi 
 
-# cmds=('zsh' 'nvim' 'node' 'deno' 'ruby' 'go' 'ag')
-# for cmd in "${cmds[@]}"; do
-  # cmdwhich=$(which ${cmd} 2>&1)
-  # if [[ "$cmdwhich" =~ ^which.*$ ]]; then
-    # echo "WARNING: $cmd is unavailable!"
-  # else
-    # echo "INFO: $cmd is available"
-  # fi
-# done
-
 ./check_binaries.sh
+
