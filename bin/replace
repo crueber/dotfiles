@@ -9,10 +9,13 @@ shift
 replace_with="$1"
 shift
 
+# Use RG or AG if available, fall back to grep.
 if command -v rg &>/dev/null ; then
   items=$(rg -l --color never "$find_this" "$@")
-else
+elif command -v ag &>/dev/null ; then
   items=$(ag -l --nocolor "$find_this" "$@")
+else
+  items=$(grep -rl "$find_this" "$@")
 fi
 
 temp="${TMPDIR:-/tmp}/replace_temp_file.$$"
