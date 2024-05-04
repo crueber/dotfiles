@@ -2,7 +2,10 @@
 ZSH=$HOME/.oh-my-zsh
 export ZSH=$ZSH
 #ZSH_THEME="chrisrueber" # or: gallois
-ZSH_THEME="agnoster" # or: gallois
+#ZSH_THEME="agnoster" # or: gallois
+if [ ! -d $ZSH/themes/nord-extended ]; then
+  git clone https://github.com/fxbrit/nord-extended.git $ZSH/themes/nord-extended
+fi
 ZSH_THEME="nord-extended/nord" # or: gallois
 
 zstyle ':omz:update' mode auto      # update automatically without asking
@@ -32,6 +35,8 @@ source $HOME/.aliases
 [ -e /usr/bin/neofetch ] && neofetch
 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+if [ -d /opt/homebrew/opt/asdf ]; then
+  . /opt/homebrew/opt/asdf/libexec/asdf.sh
+fi
+
+
