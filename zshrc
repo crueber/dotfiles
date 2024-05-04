@@ -32,11 +32,13 @@ export HISTSIZE=4096
 source $ZSH/oh-my-zsh.sh
 source $HOME/.aliases
 
-[ -e /usr/bin/neofetch ] && neofetch
-
+if [ ! -d ~/.tmux/plugins/tpm ]; then
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
 
 if [ -d /opt/homebrew/opt/asdf ]; then
   . /opt/homebrew/opt/asdf/libexec/asdf.sh
 fi
 
+[ -e /usr/bin/neofetch ] && neofetch
 
