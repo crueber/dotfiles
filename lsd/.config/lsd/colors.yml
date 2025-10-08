@@ -1,0 +1,45 @@
+user: 224                           # light peach
+group: 252                          # light grey
+
+permission:
+  read: 246                         # mid grey (neutral)
+  write: 209                        # salmon (write/change)
+  exec: 208                         # orange (action)
+  exec-sticky: 202                  # orange-red (sticky exec)
+  no-access: 245                    # dim grey (denied)
+  octal: 244                        # soft grey
+  acl: 203                          # light red
+  context: 216                      # coral
+
+date:
+  hour-old: 223                     # peach
+  day-old: 180                      # dusty rose
+  older: 238                        # charcoal
+
+size:
+  none: 245                         # dim grey
+  small: 224                        # light peach
+  medium: 216                       # coral
+  large: 203                        # light red
+
+inode:
+  valid: 252                        # light grey
+  invalid: 245                      # dim grey
+
+links:
+  valid: 208                        # orange
+  invalid: 245                      # dim grey
+
+tree-edge: 244                      # soft grey
+
+git-status:
+  default: 245                      # neutral grey
+  unmodified: 245                   # neutral grey
+  ignored: 244                      # softer grey
+  new-in-index: 216                 # coral
+  new-in-workdir: 216               # coral
+  typechange: 209                   # salmon
+  deleted: 203                      # light red
+  renamed: 224                      # light peach
+  modified: 209                     # salmon
+  conflicted: 203                   # light red

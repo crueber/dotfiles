@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Attach to tmux session named the same as current directory.
+#
+
+NAME=`basename $PWD`
+tmux attach -t "$NAME" || tmux new -s "$NAME"
+

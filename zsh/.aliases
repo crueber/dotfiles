@@ -1,0 +1,5 @@
+alias ls=lsd
+alias vim=nvim
+alias n=nvim
+alias cat=bat
+alias ll="ls -al"
