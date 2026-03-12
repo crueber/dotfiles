@@ -4,6 +4,14 @@
 
 set -euo pipefail
 
+# Require bash 4+ (matches install.sh requirement)
+if (( BASH_VERSINFO[0] < 4 )); then
+  echo "Error: bash 4 or newer is required (found bash ${BASH_VERSION})." >&2
+  echo "  macOS ships bash 3.2. Install a newer bash via Homebrew: brew install bash" >&2
+  echo "  Then ensure it appears in PATH before /bin/bash." >&2
+  exit 1
+fi
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${HOME}"
 

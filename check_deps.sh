@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # check_deps.sh — verify and (optionally) install required tools
 # Checks/installs: stow, find, sort, git, wget, fastfetch, mise, oh-my-posh,
-#                  brew, lsd, nvim, bat, btop, and ensures LazyVim.
+#                  brew, lsd, nvim, bat, btop, delta, opencode, and ensures LazyVim.
 # Supports: macOS/Homebrew, Debian/Ubuntu (apt), Arch/Manjaro (pacman)
 
 set -euo pipefail
@@ -113,6 +113,8 @@ need_cmd lsd
 need_cmd nvim "neovim"
 need_cmd bat
 need_cmd btop
+need_cmd delta
+need_cmd opencode
 
 if [ "${#missing[@]}" -gt 0 ]; then
   echo
@@ -131,26 +133,28 @@ if [ "${#missing[@]}" -gt 0 ]; then
     for cmd in "${missing[@]}"; do
       case "$cmd" in
       # Common CLI packages
-      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh)
+      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | delta | opencode)
         case "$PKG" in
         brew)
           case "$cmd" in
-          nvim) brew_install neovim ;;
-          bat) brew_install bat ;;
-          lsd) brew_install lsd ;;
-          btop) brew_install btop ;;
+          nvim)    brew_install neovim ;;
+          bat)     brew_install bat ;;
+          lsd)     brew_install lsd ;;
+          btop)    brew_install btop ;;
           fastfetch) brew_install fastfetch ;;
-          mise) brew_install mise ;;
+          mise)    brew_install mise ;;
           oh-my-posh) brew_install oh-my-posh ;;
-          *) brew_install "$cmd" ;;
+          delta)    brew_install git-delta ;;
+          opencode) brew_install opencode ;;
+          *)        brew_install "$cmd" ;;
           esac
           ;;
         apt)
           case "$cmd" in
-          nvim) apt_install neovim ;;
-          bat) apt_install bat || { apt_install batcat && ln -sf /usr/bin/batcat "$HOME/.local/bin/bat"; } ;;
-          lsd) apt_install lsd ;;
-          btop) apt_install btop ;;
+          nvim)    apt_install neovim ;;
+          bat)     apt_install bat || { apt_install batcat && ln -sf /usr/bin/batcat "$HOME/.local/bin/bat"; } ;;
+          lsd)     apt_install lsd ;;
+          btop)    apt_install btop ;;
           fastfetch) apt_install fastfetch || sudo snap install fastfetch || true ;;
           mise)
             echo "Installing 'mise' via official script..."
@@ -160,21 +164,24 @@ if [ "${#missing[@]}" -gt 0 ]; then
             echo "Installing 'oh-my-posh' via official script..."
             curl -fsSL https://ohmyposh.dev/install.sh | bash -s
             ;;
-          *)
-            apt_install "$cmd"
+          delta)    apt_install git-delta ;;
+          opencode)
+            echo "Installing 'opencode' via official script..."
+            curl -fsSL https://opencode.ai/install | bash
             ;;
+          *)        apt_install "$cmd" ;;
           esac
           ;;
         pacman)
           # Map to Arch package names
           case "$cmd" in
-          nvim) pacman_install neovim ;;
-          bat) pacman_install bat ;;
-          lsd) pacman_install lsd ;;
-          btop) pacman_install btop ;;
+          nvim)    pacman_install neovim ;;
+          bat)     pacman_install bat ;;
+          lsd)     pacman_install lsd ;;
+          btop)    pacman_install btop ;;
           fastfetch) pacman_install fastfetch ;;
           mise)
-            # Prefer pacman if available via AUR; otherwise use official script.
+            # Prefer yay (AUR) if available; otherwise use official script.
             if have yay; then
               echo "Installing 'mise' via yay (AUR)..."
               yay -S --noconfirm mise-bin || yay -S --noconfirm mise
@@ -193,9 +200,21 @@ if [ "${#missing[@]}" -gt 0 ]; then
               fi
             }
             ;;
-          *)
-            pacman_install "$cmd"
+          delta)    pacman_install git-delta ;;
+          opencode)
+            # opencode is in the AUR; fall back to official install script
+            if have paru; then
+              echo "Installing 'opencode' via paru (AUR)..."
+              paru -S --noconfirm opencode-bin
+            elif have yay; then
+              echo "Installing 'opencode' via yay (AUR)..."
+              yay -S --noconfirm opencode-bin
+            else
+              echo "Installing 'opencode' via official script..."
+              curl -fsSL https://opencode.ai/install | bash
+            fi
             ;;
+          *)        pacman_install "$cmd" ;;
           esac
           ;;
         *)

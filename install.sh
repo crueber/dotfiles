@@ -4,23 +4,91 @@
 
 set -euo pipefail
 
+# Require bash 4+ for associative arrays and mapfile
+if (( BASH_VERSINFO[0] < 4 )); then
+  echo "Error: bash 4 or newer is required (found bash ${BASH_VERSION})." >&2
+  echo "  macOS ships bash 3.2. Install a newer bash via Homebrew: brew install bash" >&2
+  echo "  Then ensure it appears in PATH before /bin/bash." >&2
+  exit 1
+fi
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${HOME}"
 TS="$(date +%Y%m%d%H%M%S)"
 
-require() {
-  if ! command -v "$1" >/dev/null 2>&1; then
-    echo "Error: required command '$1' not found." >&2
-    exit 1
+# ---------------------------------------------------------------------------
+# Platform detection — used to print install hints for missing commands
+# ---------------------------------------------------------------------------
+_detect_pkg_manager() {
+  if command -v brew >/dev/null 2>&1; then
+    echo "brew"
+  elif command -v pacman >/dev/null 2>&1; then
+    echo "pacman"
+  elif command -v apt-get >/dev/null 2>&1; then
+    echo "apt"
+  else
+    echo "unknown"
   fi
 }
-require stow
-require find
-require sort
-command -v awk >/dev/null 2>&1 || {
-  echo "Error: awk required"
-  exit 1
+PKG_MGR="$(_detect_pkg_manager)"
+
+# Print the recommended install command for a given tool on the detected platform.
+_install_hint() {
+  local cmd="$1"
+  case "$PKG_MGR" in
+  brew)
+    case "$cmd" in
+    stow)  echo "  brew install stow" ;;
+    find)  echo "  brew install findutils" ;;
+    sort)  echo "  brew install coreutils" ;;
+    awk)   echo "  brew install gawk" ;;
+    *)     echo "  brew install $cmd" ;;
+    esac
+    ;;
+  pacman)
+    case "$cmd" in
+    stow)  echo "  sudo pacman -S stow" ;;
+    find)  echo "  sudo pacman -S findutils" ;;
+    sort)  echo "  sudo pacman -S coreutils" ;;
+    awk)   echo "  sudo pacman -S gawk" ;;
+    *)     echo "  sudo pacman -S $cmd" ;;
+    esac
+    ;;
+  apt)
+    case "$cmd" in
+    stow)  echo "  sudo apt install stow" ;;
+    find)  echo "  sudo apt install findutils" ;;
+    sort)  echo "  sudo apt install coreutils" ;;
+    awk)   echo "  sudo apt install gawk" ;;
+    *)     echo "  sudo apt install $cmd" ;;
+    esac
+    ;;
+  *)
+    echo "  (no package manager detected — please install '$cmd' manually)"
+    ;;
+  esac
 }
+
+# Collect all missing required commands, then report and exit if any are absent.
+_missing=()
+for _cmd in stow find sort awk; do
+  command -v "$_cmd" >/dev/null 2>&1 || _missing+=("$_cmd")
+done
+
+if [ "${#_missing[@]}" -gt 0 ]; then
+  echo "Error: the following required commands are missing:" >&2
+  for _cmd in "${_missing[@]}"; do
+    echo "  - $_cmd" >&2
+  done
+  echo >&2
+  echo "Install them with:" >&2
+  for _cmd in "${_missing[@]}"; do
+    _install_hint "$_cmd" >&2
+  done
+  echo >&2
+  echo "Then re-run ./install.sh" >&2
+  exit 1
+fi
 
 # Collect packages = top-level directories (exclude infra)
 packages=()
