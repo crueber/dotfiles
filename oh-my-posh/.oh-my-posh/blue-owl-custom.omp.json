@@ -170,7 +170,7 @@
           "background": "#ffeb3b",
           "background_templates": [
             "{{if eq \"Charging\" .State.String}}#9B9101{{end}}",
-            "{{if eq \"Discharging\" .State.String}}#9B010B{{end}}",
+            "{{if eq \"Discharging\" .State.String}}#FEF02F{{end}}",
             "{{if eq \"Full\" .State.String}}#2FA4FE{{end}}"
           ],
           "template": " {{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }} ",
