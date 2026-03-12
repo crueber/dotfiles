@@ -27,14 +27,14 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [btop](https://github.com/aristocratos/btop) | System monitor |
 | [fastfetch](https://github.com/fastfetch-cli/fastfetch) | System info display |
 | [tmux](https://github.com/tmux/tmux) + [tpm](https://github.com/tmux-plugins/tpm) | Terminal multiplexer + plugin manager |
+| [opencode](https://opencode.ai) | AI coding assistant (aliased via opentmux) |
 
 ### Optional
 
 | Tool | Purpose |
 |------|---------|
-| [LM Studio](https://lmstudio.ai) | Local LLM runner (path configured in `.zshrc`) |
-| [opencode](https://opencode.ai) / opentmux | AI coding assistant alias |
-| Java (Temurin 17) | `JAVA_HOME` is configured in `.zshrc` |
+| [LM Studio](https://lmstudio.ai) | Local LLM runner (macOS only; path configured in `.zshrc`) |
+| Java (Temurin 17) | `JAVA_HOME` configured in `.zshrc` on macOS |
 
 Run `check_deps.sh` to verify what is and isn't installed — it can also install missing tools automatically.
 
