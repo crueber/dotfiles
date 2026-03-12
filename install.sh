@@ -16,6 +16,15 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${HOME}"
 TS="$(date +%Y%m%d%H%M%S)"
 
+# Initialize/update git submodules (e.g. tmux plugins) before stow runs,
+# so symlink targets are populated.
+if [ -f "$SCRIPT_DIR/.gitmodules" ]; then
+  echo "Initializing git submodules..."
+  git -C "$SCRIPT_DIR" submodule update --init --recursive
+  echo "Submodules ready."
+  echo
+fi
+
 # ---------------------------------------------------------------------------
 # Platform detection — used to print install hints for missing commands
 # ---------------------------------------------------------------------------
