@@ -4,4 +4,5 @@ alias n=nvim
 alias cat=bat
 alias ll="ls -al"
 alias ".."="cd .."
+alias "..."="cd ../.."
 alias lg=lazygit
