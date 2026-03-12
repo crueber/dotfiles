@@ -23,6 +23,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [lsd](https://github.com/lsd-rs/lsd) | Modern `ls` replacement |
 | [bat](https://github.com/sharkdp/bat) | Modern `cat` replacement |
 | [lazygit](https://github.com/jesseduffield/lazygit) | Terminal UI for git |
+| [delta](https://dandavison.github.io/delta/) | Syntax-highlighting pager for git diffs |
 | [btop](https://github.com/aristocratos/btop) | System monitor |
 | [fastfetch](https://github.com/fastfetch-cli/fastfetch) | System info display |
 | [tmux](https://github.com/tmux/tmux) + [tpm](https://github.com/tmux-plugins/tpm) | Terminal multiplexer + plugin manager |
@@ -115,7 +116,7 @@ Checks for all required and recommended tools. Detects the available package man
 
 ### `git/`
 
-- **`.gitconfig`** — User info, push default (`current`), useful aliases (`aa`, `ap`, `ci`, `co`, `st`, `rebase-origin`), Sourcetree difftool/mergetool, and a commit message template.
+- **`.gitconfig`** — User info, push default (`current`), useful aliases (`aa`, `ap`, `ci`, `co`, `st`, `rebase-origin`), delta as pager/difftool/mergetool (dark mode default; switch to light via `DELTA_FEATURES=+light`), and a commit message template.
 - **`.gitignore`** — Global ignores: `.DS_Store`, editor swap files, common Rails and macOS artifacts.
 
 ### `tmux/`
@@ -160,7 +161,8 @@ Scripts symlinked into `~/bin/` and available on `$PATH`:
 | `sync-to-git.sh` | Initialize/auto-commit a Syncthing-managed directory as a git repo |
 | `update-repos.sh` | Pull `master` or `main` for every git repo in subdirectories |
 | `xlsx-to-csv.sh` | Convert `.xlsx` to `.csv` using Nushell |
-| `aaxclean-cli` | Compiled binary for Audible AAX decryption |
+
+> **`aaxclean-cli` note:** This binary is no longer vendored in the repo. Download the appropriate build for your platform from the [aaxclean-cli releases page](https://github.com/Mbucari/AAXClean/releases) and place it in `~/bin/` manually.
 
 ## Adding a New Package
 
