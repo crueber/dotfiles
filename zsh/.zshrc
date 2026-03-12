@@ -1,4 +1,6 @@
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+[ -f ~/.zshrc.update ] && source ~/.zshrc.update
+
 export EDITOR=nvim
 export VISUAL=nvim
 export HISTSIZE=4096

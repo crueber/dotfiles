@@ -1,0 +1,37 @@
+# .zshrc.update — Auto-update dotfiles repo once per day.
+# Sourced by .zshrc. Warns on failure; never blocks shell startup.
+
+_dotfiles_update() {
+  local stamp="$HOME/.cache/dotfiles_last_pull"
+  local today
+  today="$(date +%Y%m%d)"
+
+  # Ensure the cache directory exists
+  mkdir -p "$(dirname "$stamp")"
+
+  # Skip if already pulled today
+  [[ -f "$stamp" ]] && [[ "$(cat "$stamp" 2>/dev/null)" == "$today" ]] && return 0
+
+  # Resolve ~/.zshrc symlink to find the repo root.
+  # readlink -f is GNU only; BSD readlink (macOS) gives an absolute path directly from stow.
+  local zshrc_real
+  zshrc_real="$(readlink -f "$HOME/.zshrc" 2>/dev/null || readlink "$HOME/.zshrc" 2>/dev/null)"
+  [[ -z "$zshrc_real" ]] && return 0
+  local repo_dir
+  repo_dir="$(dirname "$zshrc_real")"
+  # The symlink target sits inside the zsh/ package dir; step up to the repo root
+  repo_dir="$(dirname "$repo_dir")"
+
+  # Bail if this doesn't look like a git repo
+  [[ -d "$repo_dir/.git" ]] || return 0
+
+  # Pull — warn on failure but never abort shell startup
+  if git -C "$repo_dir" pull --ff-only --quiet 2>/dev/null; then
+    git -C "$repo_dir" submodule update --init --recursive --quiet 2>/dev/null || true
+    echo "$today" > "$stamp"
+  else
+    echo "dotfiles: auto-pull failed (network down or local changes pending)" >&2
+  fi
+}
+_dotfiles_update
+unset -f _dotfiles_update
