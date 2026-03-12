@@ -25,6 +25,19 @@ if [ -f "$SCRIPT_DIR/.gitmodules" ]; then
   echo
 fi
 
+# Run opencode-extras install if opencode is installed
+if [ -f "$SCRIPT_DIR/extras/opencode-extras/install.sh" ]; then
+  if [ -d "${HOME}/.config/opencode" ]; then
+    echo "Running extras/opencode-extras/install.sh..."
+    bash "$SCRIPT_DIR/extras/opencode-extras/install.sh"
+    echo
+  else
+    echo "Warning: ~/.config/opencode not found; skipping opencode-extras install." >&2
+    echo "  Run extras/opencode-extras/install.sh manually after installing opencode." >&2
+    echo
+  fi
+fi
+
 # ---------------------------------------------------------------------------
 # Platform detection — used to print install hints for missing commands
 # ---------------------------------------------------------------------------
@@ -104,7 +117,7 @@ packages=()
 while IFS= read -r -d '' dir; do
   name="$(basename "$dir")"
   case "$name" in
-  .git | .svn | .hg | .github | .gitlab | node_modules | .stow) continue ;;
+  .git | .svn | .hg | .github | .gitlab | node_modules | .stow | extras) continue ;;
   esac
   packages+=("$name")
 done < <(find "$SCRIPT_DIR" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)

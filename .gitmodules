@@ -7,3 +7,6 @@
 [submodule "tmux/.tmux/plugins/tmux-themepack"]
 	path = tmux/.tmux/plugins/tmux-themepack
 	url = https://github.com/jimeh/tmux-themepack
+[submodule "extras/opencode-extras"]
+	path = extras/opencode-extras
+	url = https://github.com/crueber/opencode-extras

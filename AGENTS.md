@@ -10,15 +10,21 @@ Every top-level directory is a stow package whose internal tree mirrors `$HOME`.
 ```
 dotfiles/
 ├── bin/          → ~/bin/           (utility scripts)
+├── extras/                          (non-stow submodules with own install scripts)
+│   └── opencode-extras/             (opencode skills/modes — symlinked via its own install.sh)
 ├── git/          → ~/               (.gitconfig, .gitignore)
 ├── lsd/          → ~/.config/lsd/   (lsd color config)
 ├── oh-my-posh/   → ~/.oh-my-posh/   (prompt themes)
 ├── tmux/         → ~/               (.tmux.conf, .tmux/)
 ├── zsh/          → ~/               (.zshrc, .aliases)
-├── install.sh                       (stow all packages)
+├── install.sh                       (stow all packages + run extras installs)
 ├── unstow.sh                        (unstow all packages)
 └── check_deps.sh                    (verify/install dependencies)
 ```
+
+The `extras/` directory is **excluded from stow**. It contains submodules that manage
+their own symlinks via their own `install.sh` scripts. `install.sh` calls each one
+automatically, and `.zshrc.update` re-runs them after each daily pull.
 
 The `bin/bin/` double-nesting is intentional: the outer `bin/` is the stow package,
 the inner `bin/` mirrors `~/bin/` so each script is symlinked individually.
@@ -60,17 +66,18 @@ recommended tool for validating shell scripts if available.
 
 ## Git Submodules
 
-Three tmux plugins are tracked as git submodules under `tmux/.tmux/plugins/`:
+Three tmux plugins and one opencode extras package are tracked as git submodules:
 
 | Path | Remote |
 |---|---|
 | `tmux/.tmux/plugins/nord-tmux` | `https://github.com/arcticicestudio/nord-tmux` |
 | `tmux/.tmux/plugins/tmux-sensible` | `https://github.com/tmux-plugins/tmux-sensible` |
 | `tmux/.tmux/plugins/tmux-themepack` | `https://github.com/jimeh/tmux-themepack` |
+| `extras/opencode-extras` | `https://github.com/crueber/opencode-extras` |
 
 `tpm` (the plugin manager) is a full vendored copy — NOT a submodule.
 
-**When committing changes that affect tmux plugins or the tmux package:**
+**When committing changes that affect tmux plugins, extras submodules, or the tmux package:**
 - Always run `git submodule update --init --recursive` before committing to ensure
   submodule pointers are consistent.
 - When adding or updating a submodule, commit the updated `.gitmodules` and submodule
@@ -89,7 +96,7 @@ Three tmux plugins are tracked as git submodules under `tmux/.tmux/plugins/`:
 4. Commit the new directory.
 
 Excluded directory names (never treated as stow packages): `.git`, `.svn`, `.hg`,
-`.github`, `.gitlab`, `node_modules`, `.stow`.
+`.github`, `.gitlab`, `node_modules`, `.stow`, `extras`.
 
 ---
 
