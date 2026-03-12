@@ -28,6 +28,11 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [fastfetch](https://github.com/fastfetch-cli/fastfetch) | System info display |
 | [tmux](https://github.com/tmux/tmux) + [tpm](https://github.com/tmux-plugins/tpm) | Terminal multiplexer + plugin manager |
 | [opencode](https://opencode.ai) | AI coding assistant (aliased via opentmux) |
+| [superfile](https://superfile.netlify.app/) | Terminal file manager (`spf`) |
+| [cliamp](https://github.com/bjarneo/cliamp) | Retro terminal music player |
+| [gh](https://cli.github.com/) | GitHub CLI |
+| [gh-dash](https://github.com/dlvhdr/gh-dash) | GitHub dashboard TUI (gh extension) |
+| [neofetch](https://github.com/dylanaraps/neofetch) | System info display |
 
 ### Optional
 

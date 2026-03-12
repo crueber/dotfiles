@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # check_deps.sh — verify and (optionally) install required tools
 # Checks/installs: stow, find, sort, git, wget, fastfetch, mise, oh-my-posh,
-#                  brew, lsd, nvim, bat, btop, delta, opencode, and ensures LazyVim.
+#                  brew, lsd, nvim, bat, btop, delta, opencode, spf, cliamp,
+#                  gh, gh-dash, neofetch, and ensures LazyVim.
 # Supports: macOS/Homebrew, Debian/Ubuntu (apt), Arch/Manjaro (pacman)
 
 set -euo pipefail
@@ -115,6 +116,19 @@ need_cmd bat
 need_cmd btop
 need_cmd delta
 need_cmd opencode
+need_cmd spf "superfile"
+need_cmd cliamp
+need_cmd gh
+need_cmd neofetch
+
+# gh-dash is a gh extension — check via `gh extension list` rather than PATH
+missing_gh_dash=0
+if have gh && gh extension list 2>/dev/null | grep -q "dlvhdr/gh-dash"; then
+  printf "OK   %-12s -> gh extension\n" "gh-dash"
+else
+  printf "MISS %-12s\n" "gh-dash"
+  missing_gh_dash=1
+fi
 
 if [ "${#missing[@]}" -gt 0 ]; then
   echo
@@ -133,7 +147,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
     for cmd in "${missing[@]}"; do
       case "$cmd" in
       # Common CLI packages
-      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | delta | opencode)
+      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | delta | opencode | spf | cliamp | gh | neofetch)
         case "$PKG" in
         brew)
           case "$cmd" in
@@ -146,6 +160,13 @@ if [ "${#missing[@]}" -gt 0 ]; then
           oh-my-posh) brew_install oh-my-posh ;;
           delta)    brew_install git-delta ;;
           opencode) brew_install opencode ;;
+          spf)      brew_install superfile ;;
+          cliamp)
+            echo "Installing 'cliamp' via Homebrew tap..."
+            brew tap bjarneo/cliamp && brew_install bjarneo/cliamp/cliamp
+            ;;
+          gh)       brew_install gh ;;
+          neofetch) brew_install neofetch ;;
           *)        brew_install "$cmd" ;;
           esac
           ;;
@@ -169,6 +190,16 @@ if [ "${#missing[@]}" -gt 0 ]; then
             echo "Installing 'opencode' via official script..."
             curl -fsSL https://opencode.ai/install | bash
             ;;
+          spf)
+            echo "Installing 'superfile' via official script..."
+            curl -fsSL https://superfile.netlify.app/install.sh | bash
+            ;;
+          cliamp)
+            echo "Installing 'cliamp' via official script..."
+            curl -fsSL https://raw.githubusercontent.com/bjarneo/cliamp/HEAD/install.sh | sh
+            ;;
+          gh)       apt_install gh ;;
+          neofetch) apt_install neofetch ;;
           *)        apt_install "$cmd" ;;
           esac
           ;;
@@ -214,6 +245,30 @@ if [ "${#missing[@]}" -gt 0 ]; then
               curl -fsSL https://opencode.ai/install | bash
             fi
             ;;
+          spf)
+            # superfile is in the AUR
+            if have paru; then
+              paru -S --noconfirm superfile-bin
+            elif have yay; then
+              yay -S --noconfirm superfile-bin
+            else
+              echo "Installing 'superfile' via official script..."
+              curl -fsSL https://superfile.netlify.app/install.sh | bash
+            fi
+            ;;
+          cliamp)
+            # cliamp is in the AUR
+            if have paru; then
+              paru -S --noconfirm cliamp
+            elif have yay; then
+              yay -S --noconfirm cliamp
+            else
+              echo "Installing 'cliamp' via official script..."
+              curl -fsSL https://raw.githubusercontent.com/bjarneo/cliamp/HEAD/install.sh | sh
+            fi
+            ;;
+          gh)       pacman_install github-cli ;;
+          neofetch) pacman_install neofetch ;;
           *)        pacman_install "$cmd" ;;
           esac
           ;;
@@ -253,6 +308,21 @@ if [ "${#missing[@]}" -gt 0 ]; then
   fi
 else
   echo "All base commands present."
+fi
+
+# gh-dash install (handled separately — it's a gh extension, not a PATH binary)
+if [ "$missing_gh_dash" -eq 1 ]; then
+  echo
+  echo "Missing: gh-dash (gh extension)"
+  install_instructions_note
+  if ask_install; then
+    if have gh; then
+      echo "Installing 'gh-dash' as a gh extension..."
+      gh extension install dlvhdr/gh-dash
+    else
+      echo "Cannot install gh-dash: 'gh' is not installed. Install gh first."
+    fi
+  fi
 fi
 
 # Ensure brew in PATH if it was just installed
