@@ -1,6 +1,3 @@
-#eval "$(oh-my-posh init zsh --config 'catppuccin_mocha')"
-eval "$(oh-my-posh init zsh --config '~/.oh-my-posh/blue-owl-custom.omp.json')"
-
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 export EDITOR=nvim
 export VISUAL=nvim
@@ -24,6 +21,10 @@ eval "$(mise activate zsh)"
 
 # opencode
 export PATH=$HOME/.opencode/bin:$PATH
+
+# oh-my-posh — init after PATH is fully set so the binary can be found
+#eval "$(oh-my-posh init zsh --config 'catppuccin_mocha')"
+eval "$(oh-my-posh init zsh --config '~/.oh-my-posh/blue-owl-custom.omp.json')"
 
 if [[ -z "$TMUX" ]] && command -v tmux &>/dev/null; then
   #tmux attach 2>/dev/null || tmux new-session
