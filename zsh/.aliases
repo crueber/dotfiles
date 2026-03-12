@@ -3,3 +3,5 @@ alias vim=nvim
 alias n=nvim
 alias cat=bat
 alias ll="ls -al"
+alias ".."="cd .."
+alias lg=lazygit
