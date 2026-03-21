@@ -37,6 +37,13 @@ fi
 
 
 
+
+
+
+
+
+
+
 # >>> opentmux >>>
 export OPENCODE_PORT=4096
 alias opencode='opentmux'
