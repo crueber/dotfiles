@@ -32,7 +32,7 @@ _sync_opencode_extras() {
   local extras_dir="${SCRIPT_DIR}/extras/opencode-extras"
   local remote="https://github.com/crueber/opencode-extras"
 
-  if [ -d "${extras_dir}/.git" ]; then
+  if git -C "$extras_dir" rev-parse --git-dir >/dev/null 2>&1; then
     echo "Updating extras/opencode-extras..."
     git -C "$extras_dir" pull --ff-only --quiet origin main || {
       echo "Warning: could not pull extras/opencode-extras (network issue?); using existing copy." >&2
@@ -139,7 +139,7 @@ packages=()
 while IFS= read -r -d '' dir; do
   name="$(basename "$dir")"
   case "$name" in
-  .git | .svn | .hg | .github | .gitlab | node_modules | .stow | extras) continue ;;
+  .git | .svn | .hg | .github | .gitlab | node_modules | .stow | .worktrees | extras) continue ;;
   esac
   packages+=("$name")
 done < <(find "$SCRIPT_DIR" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
