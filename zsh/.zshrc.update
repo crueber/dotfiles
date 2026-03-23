@@ -25,6 +25,13 @@ _dotfiles_update() {
   # Bail if this doesn't look like a git repo
   [[ -d "$repo_dir/.git" ]] || return 0
 
+  # Ensure we are on the main branch before pulling
+  local current_branch
+  current_branch="$(git -C "$repo_dir" symbolic-ref --short HEAD 2>/dev/null)"
+  if [[ "$current_branch" != "main" ]]; then
+    git -C "$repo_dir" checkout main --quiet 2>/dev/null || return 0
+  fi
+
   # Pull — warn on failure but never abort shell startup
   if git -C "$repo_dir" pull --ff-only --quiet 2>/dev/null; then
     git -C "$repo_dir" submodule update --init --recursive --quiet 2>/dev/null || true
