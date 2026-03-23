@@ -16,7 +16,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${HOME}"
 TS="$(date +%Y%m%d%H%M%S)"
 
-# Initialize/update git submodules (e.g. tmux plugins) before stow runs,
+# Initialize/update git submodules (tmux plugins) before stow runs,
 # so symlink targets are populated.
 if [ -f "$SCRIPT_DIR/.gitmodules" ]; then
   echo "Initializing git submodules..."
@@ -25,17 +25,39 @@ if [ -f "$SCRIPT_DIR/.gitmodules" ]; then
   echo
 fi
 
-# Run opencode-extras install if opencode is installed
-if [ -f "$SCRIPT_DIR/extras/opencode-extras/install.sh" ]; then
-  if [ -d "${HOME}/.config/opencode" ]; then
-    echo "Running extras/opencode-extras/install.sh..."
-    bash "$SCRIPT_DIR/extras/opencode-extras/install.sh"
-    echo
+# Sync extras/opencode-extras via a plain git clone/pull (not a submodule).
+# This avoids submodule init failures on fresh installs while always pulling
+# the latest main branch.
+_sync_opencode_extras() {
+  local extras_dir="${SCRIPT_DIR}/extras/opencode-extras"
+  local remote="https://github.com/crueber/opencode-extras"
+
+  if [ -d "${extras_dir}/.git" ]; then
+    echo "Updating extras/opencode-extras..."
+    git -C "$extras_dir" pull --ff-only --quiet origin main || {
+      echo "Warning: could not pull extras/opencode-extras (network issue?); using existing copy." >&2
+    }
   else
-    echo "Warning: ~/.config/opencode not found; skipping opencode-extras install." >&2
-    echo "  Run extras/opencode-extras/install.sh manually after installing opencode." >&2
+    echo "Cloning extras/opencode-extras..."
+    mkdir -p "${SCRIPT_DIR}/extras"
+    git clone --depth 1 --quiet "$remote" "$extras_dir" || {
+      echo "Warning: could not clone extras/opencode-extras; skipping opencode-extras install." >&2
+      return 1
+    }
+  fi
+  return 0
+}
+
+if [ -d "${HOME}/.config/opencode" ]; then
+  if _sync_opencode_extras; then
+    echo "Running extras/opencode-extras/install.sh..."
+    bash "${SCRIPT_DIR}/extras/opencode-extras/install.sh"
     echo
   fi
+else
+  echo "Warning: ~/.config/opencode not found; skipping opencode-extras install." >&2
+  echo "  Run extras/opencode-extras/install.sh manually after installing opencode." >&2
+  echo
 fi
 
 # ---------------------------------------------------------------------------

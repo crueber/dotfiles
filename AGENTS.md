@@ -10,8 +10,8 @@ Every top-level directory is a stow package whose internal tree mirrors `$HOME`.
 ```
 dotfiles/
 ├── bin/          → ~/bin/           (utility scripts)
-├── extras/                          (non-stow submodules with own install scripts)
-│   └── opencode-extras/             (opencode skills/modes — symlinked via its own install.sh)
+├── extras/                          (non-stow extras with own install scripts; gitignored)
+│   └── opencode-extras/             (opencode skills/modes — cloned and symlinked via install.sh)
 ├── git/          → ~/               (.gitconfig, .gitignore)
 ├── lsd/          → ~/.config/lsd/   (lsd color config)
 ├── oh-my-posh/   → ~/.oh-my-posh/   (prompt themes)
@@ -22,9 +22,10 @@ dotfiles/
 └── check_deps.sh                    (verify/install dependencies)
 ```
 
-The `extras/` directory is **excluded from stow**. It contains submodules that manage
-their own symlinks via their own `install.sh` scripts. `install.sh` calls each one
-automatically, and `.zshrc.update` re-runs them after each daily pull.
+The `extras/` directory is **excluded from stow** and **gitignored**. It contains
+external repos that manage their own symlinks via their own `install.sh` scripts.
+`install.sh` clones or pulls each one automatically, and `.zshrc.update` re-runs
+them after each daily pull.
 
 The `bin/bin/` double-nesting is intentional: the outer `bin/` is the stow package,
 the inner `bin/` mirrors `~/bin/` so each script is symlinked individually.
@@ -66,18 +67,21 @@ recommended tool for validating shell scripts if available.
 
 ## Git Submodules
 
-Three tmux plugins and one opencode extras package are tracked as git submodules:
+Three tmux plugins are tracked as git submodules:
 
 | Path | Remote |
 |---|---|
 | `tmux/.tmux/plugins/nord-tmux` | `https://github.com/arcticicestudio/nord-tmux` |
 | `tmux/.tmux/plugins/tmux-sensible` | `https://github.com/tmux-plugins/tmux-sensible` |
 | `tmux/.tmux/plugins/tmux-themepack` | `https://github.com/jimeh/tmux-themepack` |
-| `extras/opencode-extras` | `https://github.com/crueber/opencode-extras` |
 
 `tpm` (the plugin manager) is a full vendored copy — NOT a submodule.
 
-**When committing changes that affect tmux plugins, extras submodules, or the tmux package:**
+`extras/opencode-extras` is **not a submodule** — it is cloned directly by `install.sh`
+from `https://github.com/crueber/opencode-extras` and is gitignored. Do not add it
+back as a submodule.
+
+**When committing changes that affect tmux plugins or the tmux package:**
 - Always run `git submodule update --init --recursive` before committing to ensure
   submodule pointers are consistent.
 - When adding or updating a submodule, commit the updated `.gitmodules` and submodule
