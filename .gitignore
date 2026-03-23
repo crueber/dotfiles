@@ -1,3 +1,9 @@
 # Local secrets and machine-specific overrides — never commit these
 zsh/.zshrc.local
 .zshrc.local
+
+# Git worktrees (project-local, isolated workspaces)
+.worktrees/
+
+# extras cloned via install.sh (not a submodule)
+extras/opencode-extras/
