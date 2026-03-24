@@ -34,13 +34,17 @@ _sync_opencode_extras() {
 
   if git -C "$extras_dir" rev-parse --git-dir >/dev/null 2>&1; then
     echo "Updating extras/opencode-extras..."
-    git -C "$extras_dir" pull --ff-only --quiet origin main || {
-      echo "Warning: could not pull extras/opencode-extras (network issue?); using existing copy." >&2
+    git -C "$extras_dir" fetch --quiet origin main || {
+      echo "Warning: could not fetch extras/opencode-extras (network issue?); using existing copy." >&2
+    }
+    git -C "$extras_dir" checkout --quiet main 2>/dev/null || true
+    git -C "$extras_dir" reset --hard origin/main || {
+      echo "Warning: could not reset extras/opencode-extras to origin/main; using existing copy." >&2
     }
   else
     echo "Cloning extras/opencode-extras..."
     mkdir -p "${SCRIPT_DIR}/extras"
-    git clone --depth 1 --quiet "$remote" "$extras_dir" || {
+    git clone --quiet "$remote" "$extras_dir" || {
       echo "Warning: could not clone extras/opencode-extras; skipping opencode-extras install." >&2
       return 1
     }

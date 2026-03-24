@@ -38,7 +38,9 @@ _dotfiles_update() {
     # Pull the latest main for opencode-extras (submodule update only checks out the committed pointer)
     local extras_dir="$repo_dir/extras/opencode-extras"
     if [[ -d "$extras_dir/.git" ]] || [[ -f "$extras_dir/.git" ]]; then
-      git -C "$extras_dir" pull --ff-only --quiet origin main 2>/dev/null || true
+      git -C "$extras_dir" fetch --quiet origin main 2>/dev/null || true
+      git -C "$extras_dir" checkout --quiet main 2>/dev/null || true
+      git -C "$extras_dir" reset --hard origin/main --quiet 2>/dev/null || true
     fi
     # Re-run opencode-extras install to pick up any new symlinks
     local extras_install="$repo_dir/extras/opencode-extras/install.sh"
