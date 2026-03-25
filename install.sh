@@ -25,45 +25,6 @@ if [ -f "$SCRIPT_DIR/.gitmodules" ]; then
   echo
 fi
 
-# Sync extras/opencode-extras via a plain git clone/pull (not a submodule).
-# This avoids submodule init failures on fresh installs while always pulling
-# the latest main branch.
-_sync_opencode_extras() {
-  local extras_dir="${SCRIPT_DIR}/extras/opencode-extras"
-  local remote="https://github.com/crueber/opencode-extras"
-
-  if git -C "$extras_dir" rev-parse --git-dir >/dev/null 2>&1; then
-    echo "Updating extras/opencode-extras..."
-    git -C "$extras_dir" fetch --quiet origin main || {
-      echo "Warning: could not fetch extras/opencode-extras (network issue?); using existing copy." >&2
-    }
-    git -C "$extras_dir" checkout --quiet main 2>/dev/null || true
-    git -C "$extras_dir" reset --hard origin/main || {
-      echo "Warning: could not reset extras/opencode-extras to origin/main; using existing copy." >&2
-    }
-  else
-    echo "Cloning extras/opencode-extras..."
-    mkdir -p "${SCRIPT_DIR}/extras"
-    git clone --quiet "$remote" "$extras_dir" || {
-      echo "Warning: could not clone extras/opencode-extras; skipping opencode-extras install." >&2
-      return 1
-    }
-  fi
-  return 0
-}
-
-if [ -d "${HOME}/.config/opencode" ]; then
-  if _sync_opencode_extras; then
-    echo "Running extras/opencode-extras/install.sh..."
-    bash "${SCRIPT_DIR}/extras/opencode-extras/install.sh"
-    echo
-  fi
-else
-  echo "Warning: ~/.config/opencode not found; skipping opencode-extras install." >&2
-  echo "  Run extras/opencode-extras/install.sh manually after installing opencode." >&2
-  echo
-fi
-
 # ---------------------------------------------------------------------------
 # Platform detection — used to print install hints for missing commands
 # ---------------------------------------------------------------------------

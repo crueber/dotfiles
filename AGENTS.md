@@ -10,22 +10,18 @@ Every top-level directory is a stow package whose internal tree mirrors `$HOME`.
 ```
 dotfiles/
 ├── bin/          → ~/bin/           (utility scripts)
-├── extras/                          (non-stow extras with own install scripts; gitignored)
-│   └── opencode-extras/             (opencode skills/modes — cloned and symlinked via install.sh)
+├── extras/                          (non-stow extras; gitignored)
 ├── git/          → ~/               (.gitconfig, .gitignore)
 ├── lsd/          → ~/.config/lsd/   (lsd color config)
 ├── oh-my-posh/   → ~/.oh-my-posh/   (prompt themes)
 ├── tmux/         → ~/               (.tmux.conf, .tmux/)
 ├── zsh/          → ~/               (.zshrc, .aliases)
-├── install.sh                       (stow all packages + run extras installs)
+├── install.sh                       (stow all packages)
 ├── unstow.sh                        (unstow all packages)
 └── check_deps.sh                    (verify/install dependencies)
 ```
 
-The `extras/` directory is **excluded from stow** and **gitignored**. It contains
-external repos that manage their own symlinks via their own `install.sh` scripts.
-`install.sh` clones or pulls each one automatically, and `.zshrc.update` re-runs
-them after each daily pull.
+The `extras/` directory is **excluded from stow** and **gitignored**.
 
 The `bin/bin/` double-nesting is intentional: the outer `bin/` is the stow package,
 the inner `bin/` mirrors `~/bin/` so each script is symlinked individually.
@@ -76,10 +72,6 @@ Three tmux plugins are tracked as git submodules:
 | `tmux/.tmux/plugins/tmux-themepack` | `https://github.com/jimeh/tmux-themepack` |
 
 `tpm` (the plugin manager) is a full vendored copy — NOT a submodule.
-
-`extras/opencode-extras` is **not a submodule** — it is cloned directly by `install.sh`
-from `https://github.com/crueber/opencode-extras` and is gitignored. Do not add it
-back as a submodule.
 
 **When committing changes that affect tmux plugins or the tmux package:**
 - Always run `git submodule update --init --recursive` before committing to ensure
