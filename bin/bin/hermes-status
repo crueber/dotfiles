@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# hermes-status - Check the status of the Hermes Agent container
+# Shows container state, uptime, and resource usage.
+
+set -euo pipefail
+
+HERMES_CONTAINER="hermes"
+HERMES_DATA_DIR="${HOME}/.hermes"
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' not found" >&2; exit 1; }
+}
+
+main() {
+  require docker
+
+  echo "Hermes Agent Status"
+  echo "==================="
+  echo ""
+
+  # Check if container exists
+  if ! docker ps -a --format '{{.Names}}' | grep -q "^${HERMES_CONTAINER}$"; then
+    echo "Container: Not created"
+    echo "Status: Not running"
+    echo ""
+    echo "Use 'hermes-start' to start the agent."
+    exit 0
+  fi
+
+  # Get container status
+  local status
+  status=$(docker inspect -f '{{.State.Status}}' "$HERMES_CONTAINER" 2>/dev/null || echo "unknown")
+
+  echo "Container: $HERMES_CONTAINER"
+  echo "Status: $status"
+
+  if [[ "$status" == "running" ]]; then
+    local started_at
+    started_at=$(docker inspect -f '{{.State.StartedAt}}' "$HERMES_CONTAINER")
+    # Calculate uptime (simplified)
+    echo "Started: $started_at"
+    echo ""
+    echo "Resource Usage:"
+    docker stats --no-stream --format \
+      "  CPU: {{.CPUPerc}}\n  Memory: {{.MemUsage}} ({{.MemPerc}})" \
+      "$HERMES_CONTAINER" 2>/dev/null || echo "  (unable to retrieve stats)"
+    echo ""
+    echo "Ports:"
+    docker inspect -f '{{range $p, $conf := .NetworkSettings.Ports}}{{$p}} -> {{(index $conf 0).HostPort}}{{println}}{{end}}' "$HERMES_CONTAINER" 2>/dev/null | grep -v '^$' || echo "  (no exposed ports)"
+  else
+    local exit_code
+    exit_code=$(docker inspect -f '{{.State.ExitCode}}' "$HERMES_CONTAINER" 2>/dev/null || echo "unknown")
+    echo "Exit Code: $exit_code"
+    echo ""
+    echo "Use 'hermes-logs' to see why the container stopped."
+    echo "Use 'hermes-start' to restart the agent."
+  fi
+
+  echo ""
+  echo "Data Directory: $HERMES_DATA_DIR"
+}
+
+main "$@"

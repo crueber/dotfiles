@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# hermes-start - Start the Hermes Agent container in gateway mode
+# Runs the container with resource limits and auto-restart enabled.
+
+set -euo pipefail
+
+HERMES_IMAGE="nousresearch/hermes-agent:latest"
+HERMES_CONTAINER="hermes"
+HERMES_DATA_DIR="${HOME}/.hermes"
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' not found" >&2; exit 1; }
+}
+
+main() {
+  require docker
+
+  # Check if container already exists
+  if docker ps -a --format '{{.Names}}' | grep -q "^${HERMES_CONTAINER}$"; then
+    if docker ps --format '{{.Names}}' | grep -q "^${HERMES_CONTAINER}$"; then
+      echo "Hermes container is already running." >&2
+      echo "Use 'hermes-logs' to view logs or 'hermes-shell' to access the container." >&2
+      exit 0
+    else
+      echo "Hermes container exists but is stopped. Removing old container..."
+      docker rm -f "$HERMES_CONTAINER" >/dev/null 2>&1 || true
+    fi
+  fi
+
+  # Ensure data directory exists
+  if [[ ! -d "$HERMES_DATA_DIR" ]]; then
+    echo "Creating Hermes data directory: $HERMES_DATA_DIR"
+    mkdir -p "$HERMES_DATA_DIR"
+  fi
+
+  echo "Starting Hermes Agent container..."
+
+  docker run -d --platform linux/amd64 \
+    --name "$HERMES_CONTAINER" \
+    --restart unless-stopped \
+    --memory=4g \
+    --cpus=2 \
+    --shm-size=1g \
+    -v "$HERMES_DATA_DIR:/opt/data" \
+    "$HERMES_IMAGE" gateway run
+
+  echo ""
+  echo "Hermes Agent started successfully!"
+  echo "Container: $HERMES_CONTAINER"
+  echo "Data directory: $HERMES_DATA_DIR"
+  echo ""
+  echo "Use 'hermes-logs' to view logs"
+  echo "Use 'hermes-status' to check status"
+  echo "Use 'hermes-stop' to stop the container"
+}
+
+main "$@"

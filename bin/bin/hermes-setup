@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# hermes-setup - Run the Hermes Agent setup wizard
+# Creates the data directory and runs the interactive setup container.
+
+set -euo pipefail
+
+HERMES_IMAGE="nousresearch/hermes-agent:latest"
+HERMES_CONTAINER="hermes"
+HERMES_DATA_DIR="${HOME}/.hermes"
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' not found" >&2; exit 1; }
+}
+
+main() {
+  require docker
+
+  if [[ ! -d "$HERMES_DATA_DIR" ]]; then
+    echo "Creating Hermes data directory: $HERMES_DATA_DIR"
+    mkdir -p "$HERMES_DATA_DIR"
+  fi
+
+  echo "Pulling Hermes Agent image (using AMD64 emulation if needed)..."
+  docker pull --platform linux/amd64 "$HERMES_IMAGE"
+
+  echo ""
+  echo "Running Hermes Agent setup wizard..."
+  echo "Follow the prompts to configure your agent."
+  echo ""
+
+  docker run -it --rm --platform linux/amd64 \
+    -v "$HERMES_DATA_DIR:/opt/data" \
+    "$HERMES_IMAGE" setup
+
+  echo ""
+  echo "Setup complete! Your configuration is stored in: $HERMES_DATA_DIR"
+  echo "You can now start the agent with: hermes-start"
+}
+
+main "$@"

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# hermes-cli - Run the Hermes Agent in interactive CLI mode
+# Starts a temporary container for chatting with the agent interactively.
+
+set -euo pipefail
+
+HERMES_IMAGE="nousresearch/hermes-agent:latest"
+HERMES_CONTAINER="hermes"
+HERMES_DATA_DIR="${HOME}/.hermes"
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' not found" >&2; exit 1; }
+}
+
+main() {
+  require docker
+
+  # Ensure data directory exists
+  if [[ ! -d "$HERMES_DATA_DIR" ]]; then
+    echo "Creating Hermes data directory: $HERMES_DATA_DIR"
+    mkdir -p "$HERMES_DATA_DIR"
+  fi
+
+  echo "Starting Hermes Agent CLI (interactive mode)..."
+  echo "Type 'exit' or press Ctrl+D to quit."
+  echo ""
+
+  docker run -it --rm --platform linux/amd64 \
+    -v "$HERMES_DATA_DIR:/opt/data" \
+    "$HERMES_IMAGE"
+}
+
+main "$@"

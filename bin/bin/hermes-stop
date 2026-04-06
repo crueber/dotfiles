@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# hermes-stop - Stop and remove the Hermes Agent container
+# Gracefully handles case where container doesn't exist.
+
+set -euo pipefail
+
+HERMES_IMAGE="nousresearch/hermes-agent:latest"
+HERMES_CONTAINER="hermes"
+HERMES_DATA_DIR="${HOME}/.hermes"
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' not found" >&2; exit 1; }
+}
+
+main() {
+  require docker
+
+  # Check if container exists
+  if ! docker ps -a --format '{{.Names}}' | grep -q "^${HERMES_CONTAINER}$"; then
+    echo "Hermes container is not running (no container found)." >&2
+    exit 0
+  fi
+
+  echo "Stopping Hermes Agent container..."
+  docker stop "$HERMES_CONTAINER" >/dev/null 2>&1 || true
+
+  echo "Removing Hermes Agent container..."
+  docker rm -f "$HERMES_CONTAINER" >/dev/null 2>&1 || true
+
+  echo ""
+  echo "Hermes Agent stopped and removed."
+  echo "Your data is preserved in: $HERMES_DATA_DIR"
+  echo "Use 'hermes-start' to start the agent again."
+}
+
+main "$@"

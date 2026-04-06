@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# hermes-logs - View logs from the Hermes Agent container
+# Shows the last 50 lines and follows new output.
+
+set -euo pipefail
+
+HERMES_CONTAINER="hermes"
+HERMES_DATA_DIR="${HOME}/.hermes"
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' not found" >&2; exit 1; }
+}
+
+main() {
+  require docker
+
+  # Check if container exists
+  if ! docker ps -a --format '{{.Names}}' | grep -q "^${HERMES_CONTAINER}$"; then
+    echo "Hermes container not found." >&2
+    echo "Use 'hermes-start' to start the agent first." >&2
+    exit 1
+  fi
+
+  echo "Showing logs for Hermes container (Ctrl+C to exit)..."
+  echo ""
+
+  docker logs --tail 50 -f "$HERMES_CONTAINER"
+}
+
+main "$@"

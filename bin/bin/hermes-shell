@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# hermes-shell - Open an interactive shell in the Hermes Agent container
+# Useful for debugging and manual configuration.
+
+set -euo pipefail
+
+HERMES_CONTAINER="hermes"
+HERMES_DATA_DIR="${HOME}/.hermes"
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || { echo "Error: '$1' not found" >&2; exit 1; }
+}
+
+main() {
+  require docker
+
+  # Check if container exists and is running
+  if ! docker ps --format '{{.Names}}' | grep -q "^${HERMES_CONTAINER}$"; then
+    echo "Hermes container is not running." >&2
+    echo "Use 'hermes-start' to start the agent first." >&2
+    exit 1
+  fi
+
+  echo "Opening shell in Hermes container (type 'exit' to leave)..."
+  echo ""
+
+  docker exec -it "$HERMES_CONTAINER" /bin/bash
+}
+
+main "$@"
