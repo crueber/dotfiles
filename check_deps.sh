@@ -367,6 +367,16 @@ if have brew; then
   eval "$(/usr/local/bin/brew shellenv 2>/dev/null || true)"
 fi
 
+# mise-managed tools — install anything declared in ~/.config/mise/config.toml
+if have mise; then
+  echo
+  echo "Installing mise tools from ~/.config/mise/config.toml..."
+  mise install --yes
+else
+  echo
+  echo "mise not found — runtime tools (bun, deno, go, gradle, kotlin, node, python, ruby, rust) not auto-installed."
+fi
+
 echo
 echo "Checking LazyVim for Neovim..."
 

@@ -17,7 +17,6 @@ config/.config/git/
 
 
 # Tool auth/state files — contain live tokens or machine sessions
-config/.config/collie/.env
 config/.config/gh/hosts.yml
 config/.config/go/telemetry/
 config/.config/herdr/*.log
