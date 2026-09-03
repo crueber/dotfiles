@@ -5,7 +5,7 @@ onboarding = false
 # tmux session -> workspace, tmux window -> tab, tmux pane -> pane.
 
 [keys]
-prefix = "ctrl+space"
+prefix = "ctrl+b"
 
 # Config and help
 reload_config = "prefix+q"
@@ -42,7 +42,7 @@ rename_pane = "prefix+shift+o"
 new_tab = "prefix+c"
 rename_tab = "prefix+r"
 close_tab = "prefix+k"
-switch_tab = ["prefix+1..9", "alt+1..9"]
+switch_tab = ["alt+shift+1..9", "alt+1..9"]
 previous_tab = ["prefix+p", "alt+left"]
 next_tab = ["prefix+n", "alt+right"]
 
