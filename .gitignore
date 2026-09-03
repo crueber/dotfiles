@@ -15,6 +15,9 @@ extras/opencode-extras/
 # Machine-specific git credential helpers, tokens, and CAs (per-host)
 config/.config/git/
 
+# Collie — machine-local service and config, but keep it out of dotfiles
+config/.config/collie/
+config/.config/systemd/
 
 # Tool auth/state files — contain live tokens or machine sessions
 config/.config/gh/hosts.yml
