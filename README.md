@@ -41,7 +41,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [LM Studio](https://lmstudio.ai) | Local LLM runner (macOS only; path configured in `.zshrc`) |
 | Java (Temurin 17) | `JAVA_HOME` configured in `.zshrc` on macOS |
 
-Run `check_deps.sh` to verify what is and isn't installed — it can also install missing tools automatically.
+`install.sh` runs `check_deps.sh` automatically before stowing. You can also run it standalone:
 
 ## Installation
 
@@ -50,13 +50,12 @@ Run `check_deps.sh` to verify what is and isn't installed — it can also instal
 git clone git@github.com:crueber/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 
-# 2. (Optional) Check and install dependencies
-./check_deps.sh
-# or auto-install everything without prompts:
-./check_deps.sh --yes
-
-# 3. Stow all packages into $HOME
+# 2. Stow all packages (runs check_deps.sh first)
 ./install.sh
+
+# Optional: check/install dependencies on their own
+./check_deps.sh          # interactive
+./check_deps.sh --yes    # auto-install everything without prompts
 ```
 
 `install.sh` is safe to re-run at any time. It will never silently overwrite existing files — conflicts are renamed to `<original>.bak.<timestamp>` before stowing.

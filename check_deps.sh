@@ -118,6 +118,15 @@ cargo_install() {
   fi
 }
 
+
+# mise-managed tools (omp, opencode, runtimes, …) are installed up front so the
+# checks below can see them via mise's shims.
+if have mise; then
+  export PATH="$HOME/.local/share/mise/shims:$PATH"
+  echo "Syncing mise tools from ~/.config/mise/config.toml..."
+  mise install --yes || echo "Warning: mise install failed." >&2
+  echo
+fi
 missing=()
 
 need_cmd() {
@@ -136,7 +145,7 @@ need_cmd stow
 need_cmd find
 need_cmd sort
 need_cmd git
-need_cmd wget
+need_cmd omp "oh-my-pi"
 need_cmd fastfetch
 need_cmd mise
 need_cmd oh-my-posh
@@ -180,7 +189,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
       # One tool failing to install must not abort the whole run (set -e)
       set +e
       case "$cmd" in
-      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | cliamp | gh | neofetch | herdr | rustnet)
+      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | cliamp | gh | neofetch | herdr | rustnet | omp)
         case "$PKG" in
         brew)
           case "$cmd" in
@@ -340,6 +349,9 @@ if [ "${#missing[@]}" -gt 0 ]; then
       brew)
         ensure_brew || echo "Homebrew installation skipped."
         ;;
+      omp)
+        echo "Error: 'omp' is managed by mise (oh-my-pi in ~/.config/mise/config.toml), but mise is not installed." >&2
+        ;;
       *)
         echo "Unknown installer mapping for $cmd"
         ;;
@@ -372,15 +384,6 @@ if have brew; then
   eval "$(/usr/local/bin/brew shellenv 2>/dev/null || true)"
 fi
 
-# mise-managed tools — install anything declared in ~/.config/mise/config.toml
-if have mise; then
-  echo
-  echo "Installing mise tools from ~/.config/mise/config.toml..."
-  mise install --yes
-else
-  echo
-  echo "mise not found — runtime tools (bun, deno, go, gradle, kotlin, node, python, ruby, rust) not auto-installed."
-fi
 
 echo
 echo "Checking LazyVim for Neovim..."
