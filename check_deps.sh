@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # check_deps.sh — verify and (optionally) install required tools
 # Checks/installs: stow, find, sort, git, wget, fastfetch, mise, oh-my-posh,
-#                  brew, lsd, nvim, bat, btop, delta, opencode, spf, cliamp,
+#                  brew, lsd, nvim, bat, btop, opencode, spf, cliamp,
 #                  gh, gh-dash, neofetch, and ensures LazyVim.
-# Supports: macOS/Homebrew, Debian/Ubuntu (apt), Arch/Manjaro (pacman)
+# Supports: macOS/Homebrew, Debian/Ubuntu (apt), Arch/Manjaro (paru > yay > pamac > pacman)
 
 set -euo pipefail
 
@@ -38,6 +38,16 @@ elif have pacman; then
   PKG="pacman"
 fi
 
+# Arch AUR helper preference: paru > yay > pamac > pacman
+AUR_HELPER="pacman"
+if have paru; then
+  AUR_HELPER="paru"
+elif have yay; then
+  AUR_HELPER="yay"
+elif have pamac; then
+  AUR_HELPER="pamac"
+fi
+
 AUTO_YES=0
 for a in "$@"; do
   [ "$a" = "--yes" ] && AUTO_YES=1
@@ -65,8 +75,20 @@ apt_install() {
 
 pacman_install() {
   local pkg="$1"
-  echo "Installing $pkg via pacman..."
-  sudo pacman -Sy --noconfirm "$pkg"
+  case "$AUR_HELPER" in
+  paru | yay)
+    echo "Installing $pkg via $AUR_HELPER..."
+    "$AUR_HELPER" -S --noconfirm "$pkg"
+    ;;
+  pamac)
+    echo "Installing $pkg via pamac..."
+    pamac install --no-confirm "$pkg"
+    ;;
+  *)
+    echo "Installing $pkg via pacman..."
+    sudo pacman -Sy --noconfirm "$pkg"
+    ;;
+  esac
 }
 
 ensure_brew() {
@@ -114,7 +136,6 @@ need_cmd lsd
 need_cmd nvim "neovim"
 need_cmd bat
 need_cmd btop
-need_cmd delta
 need_cmd opencode
 need_cmd spf "superfile"
 need_cmd cliamp
@@ -146,8 +167,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
 
     for cmd in "${missing[@]}"; do
       case "$cmd" in
-      # Common CLI packages
-      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | delta | opencode | spf | cliamp | gh | neofetch)
+      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | cliamp | gh | neofetch)
         case "$PKG" in
         brew)
           case "$cmd" in
@@ -158,7 +178,6 @@ if [ "${#missing[@]}" -gt 0 ]; then
           fastfetch) brew_install fastfetch ;;
           mise)    brew_install mise ;;
           oh-my-posh) brew_install oh-my-posh ;;
-          delta)    brew_install git-delta ;;
           opencode) brew_install opencode ;;
           spf)      brew_install superfile ;;
           cliamp)
@@ -185,7 +204,6 @@ if [ "${#missing[@]}" -gt 0 ]; then
             echo "Installing 'oh-my-posh' via official script..."
             curl -fsSL https://ohmyposh.dev/install.sh | bash -s
             ;;
-          delta)    apt_install git-delta ;;
           opencode)
             echo "Installing 'opencode' via official script..."
             curl -fsSL https://opencode.ai/install | bash
@@ -212,34 +230,26 @@ if [ "${#missing[@]}" -gt 0 ]; then
           btop)    pacman_install btop ;;
           fastfetch) pacman_install fastfetch ;;
           mise)
-            # Prefer yay (AUR) if available; otherwise use official script.
-            if have yay; then
-              echo "Installing 'mise' via yay (AUR)..."
-              yay -S --noconfirm mise-bin || yay -S --noconfirm mise
+            # AUR helper if available; otherwise use official script.
+            if [ "$AUR_HELPER" != "pacman" ]; then
+              echo "Installing 'mise' via $AUR_HELPER (AUR)..."
+              pacman_install mise-bin || pacman_install mise
             else
               echo "Installing 'mise' via official script..."
               curl -fsSL https://mise.run | sh
             fi
             ;;
           oh-my-posh)
-            pacman_install oh-my-posh || {
-              if have yay; then
-                yay -S --noconfirm oh-my-posh-bin || yay -S --noconfirm oh-my-posh
-              else
-                echo "Installing 'oh-my-posh' via official script..."
-                curl -fsSL https://ohmyposh.dev/install.sh | bash -s
-              fi
+            pacman_install oh-my-posh-bin || pacman_install oh-my-posh || {
+              echo "Installing 'oh-my-posh' via official script..."
+              curl -fsSL https://ohmyposh.dev/install.sh | bash -s
             }
             ;;
-          delta)    pacman_install git-delta ;;
           opencode)
             # opencode is in the AUR; fall back to official install script
-            if have paru; then
-              echo "Installing 'opencode' via paru (AUR)..."
-              paru -S --noconfirm opencode-bin
-            elif have yay; then
-              echo "Installing 'opencode' via yay (AUR)..."
-              yay -S --noconfirm opencode-bin
+            if [ "$AUR_HELPER" != "pacman" ]; then
+              echo "Installing 'opencode' via $AUR_HELPER (AUR)..."
+              pacman_install opencode-bin
             else
               echo "Installing 'opencode' via official script..."
               curl -fsSL https://opencode.ai/install | bash
@@ -247,10 +257,8 @@ if [ "${#missing[@]}" -gt 0 ]; then
             ;;
           spf)
             # superfile is in the AUR
-            if have paru; then
-              paru -S --noconfirm superfile-bin
-            elif have yay; then
-              yay -S --noconfirm superfile-bin
+            if [ "$AUR_HELPER" != "pacman" ]; then
+              pacman_install superfile-bin
             else
               echo "Installing 'superfile' via official script..."
               curl -fsSL https://superfile.netlify.app/install.sh | bash
@@ -258,10 +266,8 @@ if [ "${#missing[@]}" -gt 0 ]; then
             ;;
           cliamp)
             # cliamp is in the AUR
-            if have paru; then
-              paru -S --noconfirm cliamp
-            elif have yay; then
-              yay -S --noconfirm cliamp
+            if [ "$AUR_HELPER" != "pacman" ]; then
+              pacman_install cliamp
             else
               echo "Installing 'cliamp' via official script..."
               curl -fsSL https://raw.githubusercontent.com/bjarneo/cliamp/HEAD/install.sh | sh

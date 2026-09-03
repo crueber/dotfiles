@@ -9,13 +9,13 @@ Every top-level directory is a stow package whose internal tree mirrors `$HOME`.
 
 ```
 dotfiles/
+├── agents/       → ~/.agents/       (shared agent skills)
 ├── bin/          → ~/bin/           (utility scripts)
 ├── extras/                          (non-stow extras; gitignored)
-├── git/          → ~/               (.gitconfig, .gitignore)
-├── lsd/          → ~/.config/lsd/   (lsd color config)
+├── git/          (NOT stowed; .gitconfig/.gitignore copied to ~/ if absent)
+├── config/       → ~/.config/       (app configs: lsd, htop, btop, opencode, tea, …)
 ├── oh-my-posh/   → ~/.oh-my-posh/   (prompt themes)
-├── tmux/         → ~/               (.tmux.conf, .tmux/)
-├── zsh/          → ~/               (.zshrc, .aliases)
+├── zsh/          → ~/               (.zshrc, .zsh_aliases)
 ├── install.sh                       (stow all packages)
 ├── unstow.sh                        (unstow all packages)
 └── check_deps.sh                    (verify/install dependencies)
@@ -49,11 +49,6 @@ stow -d . -t "$HOME" -R -v <package>
 # Dry-run stow for a single package (check conflicts without applying)
 stow -d . -t "$HOME" -n -v <package>
 
-# Update all git submodules to latest tracked commits
-git submodule update --init --recursive
-
-# Update a specific submodule to its latest remote HEAD
-git submodule update --remote tmux/.tmux/plugins/<plugin-name>
 ```
 
 There are no lint, test, or format commands in this repo. `shellcheck` is the
@@ -61,26 +56,6 @@ recommended tool for validating shell scripts if available.
 
 ---
 
-## Git Submodules
-
-Three tmux plugins are tracked as git submodules:
-
-| Path | Remote |
-|---|---|
-| `tmux/.tmux/plugins/nord-tmux` | `https://github.com/arcticicestudio/nord-tmux` |
-| `tmux/.tmux/plugins/tmux-sensible` | `https://github.com/tmux-plugins/tmux-sensible` |
-| `tmux/.tmux/plugins/tmux-themepack` | `https://github.com/jimeh/tmux-themepack` |
-
-`tpm` (the plugin manager) is a full vendored copy — NOT a submodule.
-
-**When committing changes that affect tmux plugins or the tmux package:**
-- Always run `git submodule update --init --recursive` before committing to ensure
-  submodule pointers are consistent.
-- When adding or updating a submodule, commit the updated `.gitmodules` and submodule
-  pointer in the same commit.
-- Never commit a submodule in a detached-HEAD or dirty state.
-- After cloning this repo fresh, run `git submodule update --init --recursive` to
-  populate the plugin directories.
 
 ---
 
@@ -119,7 +94,7 @@ set -euo pipefail
 - **Local variables and function names:** `lower_snake_case`
 - **Script filenames:** `kebab-case.sh`
 - **Config/theme filenames:** `kebab-case` with tool-appropriate extensions
-  (`.omp.json`, `.tmuxtheme`, `.yaml`)
+  (`.omp.json`, `.yaml`)
 
 ### Functions
 
@@ -175,10 +150,6 @@ require() {
 - Standard git config format.
 - Tabs for indentation under section headers.
 
-### tmux config
-- TPM plugin list at the top (`set -g @plugin ...`).
-- TPM `run` line at the very bottom of `.tmux.conf` (required by tpm).
-- Comment out alternative themes rather than deleting them.
 
 ---
 
@@ -197,6 +168,6 @@ require() {
 **Required:** `bash` (4+), `git`, `stow`, `find`, `sort`, `awk`
 
 **Recommended:** `mise`, `oh-my-posh`, `nvim` (LazyVim), `lsd`, `bat`, `lazygit`,
-`btop`, `fastfetch`, `tmux`, `tpm`
+`btop`, `fastfetch`
 
-**Supported package managers:** Homebrew (primary), apt, pacman/yay
+**Supported package managers:** Homebrew (macOS), apt (Debian/Ubuntu), Arch: `paru` > `yay` > `pamac` > `pacman`

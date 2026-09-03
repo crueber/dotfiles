@@ -20,63 +20,17 @@
 [core]
   excludesfile = ~/.gitignore
   autocrlf = input
-  pager = delta
-[interactive]
-  diffFilter = delta --color-only
 [diff]
-  tool = delta
   colorMoved = default
-[difftool "delta"]
-  cmd = delta \"$LOCAL\" \"$REMOTE\"
 [merge]
-  tool = delta
   conflictStyle = zdiff3
-[mergetool "delta"]
-  cmd = delta \"$LOCAL\" \"$MERGED\"
-  trustExitCode = true
 [commit]
 	template = ~/.stCommitMsg
-
-# ---------------------------------------------------------------------------
-# delta — pretty pager for git diffs
-# Default: dark mode. To switch to light mode for a session:
-#   export DELTA_FEATURES=+light
-# Or add that line to ~/.zshrc.local on machines with a light terminal.
-# ---------------------------------------------------------------------------
-[delta]
-  features = dark        # baseline; override per-session with DELTA_FEATURES=+light
-  navigate = true        # n/N to jump between diff sections
-  line-numbers = true
-  side-by-side = false   # enable per-session: DELTA_FEATURES=+side-by-side
-  hyperlinks = true
-
-[delta "dark"]
-  dark = true
-  syntax-theme = Monokai Extended
-  file-style = bold yellow ul
-  file-decoration-style = yellow ul
-  hunk-header-style = file line-number syntax
-  hunk-header-decoration-style = blue box
-  minus-style = syntax "#3d0000"
-  minus-emph-style = syntax "#7a0000"
-  plus-style = syntax "#002800"
-  plus-emph-style = syntax "#006000"
-  line-numbers-minus-style = "#cc6666"
-  line-numbers-plus-style = "#99cc99"
-  line-numbers-zero-style = "#555555"
-
-[delta "light"]
-  dark = false
-  light = true
-  syntax-theme = Monokai Extended Light
-  file-style = bold blue ul
-  file-decoration-style = blue ul
-  hunk-header-style = file line-number syntax
-  hunk-header-decoration-style = blue box
-  minus-style = syntax "#ffd0d0"
-  minus-emph-style = syntax "#ffaaaa"
-  plus-style = syntax "#d0ffd0"
-  plus-emph-style = syntax "#aaffaa"
-  line-numbers-minus-style = "#aa3333"
-  line-numbers-plus-style = "#336633"
-  line-numbers-zero-style = "#aaaaaa"
+# Machine-specific auth (Gitea CA, credential helpers) lives in
+# ~/.gitconfig.local — not committed.
+[include]
+	path = ~/.gitconfig.local
+[transfer]
+	bundleURI = true
+[fetch]
+	uriProtocols = https

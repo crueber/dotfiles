@@ -23,10 +23,8 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [lsd](https://github.com/lsd-rs/lsd) | Modern `ls` replacement |
 | [bat](https://github.com/sharkdp/bat) | Modern `cat` replacement |
 | [lazygit](https://github.com/jesseduffield/lazygit) | Terminal UI for git |
-| [delta](https://dandavison.github.io/delta/) | Syntax-highlighting pager for git diffs |
 | [btop](https://github.com/aristocratos/btop) | System monitor |
 | [fastfetch](https://github.com/fastfetch-cli/fastfetch) | System info display |
-| [tmux](https://github.com/tmux/tmux) + [tpm](https://github.com/tmux-plugins/tpm) | Terminal multiplexer + plugin manager |
 | [opencode](https://opencode.ai) | AI coding assistant (aliased via opentmux) |
 | [superfile](https://superfile.netlify.app/) | Terminal file manager (`spf`) |
 | [cliamp](https://github.com/bjarneo/cliamp) | Retro terminal music player |
@@ -72,20 +70,17 @@ dotfiles/
 ├── bin/
 │   └── bin/          → ~/bin/
 ├── git/
-│   ├── .gitconfig    → ~/.gitconfig
-│   └── .gitignore    → ~/.gitignore
-├── lsd/
-│   └── .config/
-│       └── lsd/      → ~/.config/lsd/
+│   ├── .gitconfig    → copied to ~/.gitconfig if absent
+│   └── .gitignore    → copied to ~/.gitignore if absent
+├── agents/
+│   └── .agents/      → ~/.agents/
+├── config/
+│   └── .config/      → ~/.config/
 ├── oh-my-posh/
 │   └── .oh-my-posh/  → ~/.oh-my-posh/
-├── tmux/
-│   ├── .tmux.conf    → ~/.tmux.conf
-│   └── .tmux/        → ~/.tmux/
 └── zsh/
     ├── .zshrc        → ~/.zshrc
-    └── .aliases      → ~/.aliases
-```
+    └── .zsh_aliases  → ~/.zsh_aliases
 
 > **Note on `bin/bin/` double-nesting:** Stow would normally symlink the entire `bin/` package directory as `~/bin`. The inner `bin/bin/` nesting causes stow to instead create `~/bin/` as a real directory and symlink each script individually inside it. This is intentional — it keeps `~/bin/` as a real directory that can safely contain non-stow-managed files alongside the symlinked scripts.
 
@@ -93,7 +88,7 @@ dotfiles/
 
 The install script does the following:
 
-1. Discovers all stow packages dynamically (any top-level directory that isn't `.git`, `.github`, `node_modules`, etc.)
+1. Copies `git/.gitconfig` and `git/.gitignore` into `$HOME` only if they don't already exist (the `git/` directory is not stowed)
 2. Runs `stow --dry-run` to detect conflicts without making any changes
 3. Parses the dry-run output to find exactly which files would conflict
 4. Renames only those conflicting files to `<path>.bak.<timestamp>`
@@ -115,21 +110,20 @@ Checks for all required and recommended tools. Detects the available package man
 ### `zsh/`
 
 - **`.zshrc`** — Initializes oh-my-posh with the `blue-owl-custom` theme, activates mise, sets `EDITOR`/`VISUAL` to nvim, configures PATH for `~/bin`, LM Studio, and opencode.
-- **`.aliases`** — Shell aliases: `ls=lsd`, `vim=nvim`, `n=nvim`, `cat=bat`, `ll="ls -al"`, `..="cd .."`, `lg=lazygit`
+- **`.zsh_aliases`** — Shell aliases: `ls=lsd`, `vim=nvim`, `n=nvim`, `cat=bat`, `ll="ls -al"`, `..="cd .."`, `lg=lazygit`
 
 **Local overrides:** Create `~/.zshrc.local` for machine-specific settings (tokens, private paths, etc.). It is sourced automatically if it exists and is excluded from git via `.gitignore`.
 
 ### `git/`
 
-- **`.gitconfig`** — User info, push default (`current`), useful aliases (`aa`, `ap`, `ci`, `co`, `st`, `rebase-origin`), delta as pager/difftool/mergetool (dark mode default; switch to light via `DELTA_FEATURES=+light`), and a commit message template.
+- **`.gitconfig`** — User info, push default (`current`), useful aliases (`aa`, `ap`, `ci`, `co`, `st`, `rebase-origin`), zdiff3 conflict style, and a commit message template.
 - **`.gitignore`** — Global ignores: `.DS_Store`, editor swap files, common Rails and macOS artifacts.
 
-### `tmux/`
+These are **copied, not symlinked**, and only when no file already exists at the target — machine-specific git config is never overwritten.
 
-- **`.tmux.conf`** — Loads [tpm](https://github.com/tmux-plugins/tpm), [tmux-sensible](https://github.com/tmux-plugins/tmux-sensible), and [tmux-themepack](https://github.com/jimeh/tmux-themepack) with the `powerline/default/blue` theme. Mouse support and `tmux-256color` terminal are enabled.
-- **`.tmux/plugins/tpm/`** — TPM is vendored directly in the repo so it's available immediately after stowing without a separate bootstrap step.
+### `agents/`
 
-After stowing, install tmux plugins by pressing `prefix + I` inside a tmux session.
+- **`.agents/skills/`** — Shared agent skills (e.g. `show-me`), symlinked to `~/.agents/skills/` so they're available across systems.
 
 ### `oh-my-posh/`
 
@@ -144,10 +138,9 @@ Four prompt themes are included. The active theme is set in `.zshrc`:
 
 To switch themes, update the `--config` path in `zsh/.zshrc`.
 
-### `lsd/`
+### `config/`
 
-- **`config.yaml`** — Enables color always, sets a custom color theme.
-- **`colors.yml`** — 256-color palette for file type coloring.
+Mirrors `~/.config`. In addition to lsd (`config.yaml` enables color always with a custom theme; `colors.yml` is the 256-color palette), it carries configs for htop, btop, lazygit, tea, opencode, and more. Machine-specific git credential helpers/tokens under `.config/git/` are gitignored.
 
 ### `bin/`
 

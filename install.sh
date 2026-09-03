@@ -16,14 +16,6 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${HOME}"
 TS="$(date +%Y%m%d%H%M%S)"
 
-# Initialize/update git submodules (tmux plugins) before stow runs,
-# so symlink targets are populated.
-if [ -f "$SCRIPT_DIR/.gitmodules" ]; then
-  echo "Initializing git submodules..."
-  git -C "$SCRIPT_DIR" submodule update --init --recursive
-  echo "Submodules ready."
-  echo
-fi
 
 # ---------------------------------------------------------------------------
 # Platform detection — used to print install hints for missing commands
@@ -104,7 +96,7 @@ packages=()
 while IFS= read -r -d '' dir; do
   name="$(basename "$dir")"
   case "$name" in
-  .git | .svn | .hg | .github | .gitlab | node_modules | .stow | .worktrees | extras) continue ;;
+  .git | git | .svn | .hg | .github | .gitlab | node_modules | .stow | .worktrees | extras) continue ;;
   esac
   packages+=("$name")
 done < <(find "$SCRIPT_DIR" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
@@ -112,6 +104,20 @@ done < <(find "$SCRIPT_DIR" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
 if [ "${#packages[@]}" -eq 0 ]; then
   echo "No stowable packages found in: $SCRIPT_DIR"
   exit 0
+fi
+
+# Ensure agent skill directories exist even before stow runs
+mkdir -p "$TARGET_DIR/.agents/skills"
+
+# git package is not stowed: ~/.gitconfig and ~/.gitignore are personal and
+# machine-specific, so they are only copied into $HOME if not already present.
+if [ ! -e "$TARGET_DIR/.gitconfig" ]; then
+  echo "Installing .gitconfig (none existed):"
+  cp "$SCRIPT_DIR/git/.gitconfig" "$TARGET_DIR/.gitconfig"
+fi
+if [ ! -e "$TARGET_DIR/.gitignore" ]; then
+  echo "Installing .gitignore (none existed):"
+  cp "$SCRIPT_DIR/git/.gitignore" "$TARGET_DIR/.gitignore"
 fi
 
 echo "Detected packages:"

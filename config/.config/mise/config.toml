@@ -1,0 +1,11 @@
+[tools]
+bun = "latest"
+deno = "latest"
+go = "latest"
+gradle = "latest"
+kotlin = { version = "latest", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
+node = "latest"
+opencode = "latest"
+python = "latest"
+ruby = "latest"
+rust = "latest"

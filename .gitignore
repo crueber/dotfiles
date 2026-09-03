@@ -1,9 +1,32 @@
 # Local secrets and machine-specific overrides — never commit these
 zsh/.zshrc.local
 .zshrc.local
+.gitconfig.local
 
 # Git worktrees (project-local, isolated workspaces)
 .worktrees/
 
 # extras cloned via install.sh (not a submodule)
 extras/opencode-extras/
+
+# JS package directories — never commit vendored packages
+**/node_modules/
+
+# Machine-specific git credential helpers, tokens, and CAs (per-host)
+config/.config/git/
+
+
+# Tool auth/state files — contain live tokens or machine sessions
+config/.config/collie/.env
+config/.config/gh/hosts.yml
+config/.config/go/telemetry/
+config/.config/herdr/*.log
+config/.config/herdr/.plugins.lock
+config/.config/herdr/session.json
+config/.config/opencode/*session*.js
+config/.config/opencode/plugins/
+config/.config/tea/
+config/.config/systemd/user/default.target.wants/
+
+# Vendored binaries
+bin/bin/oh-my-posh
