@@ -16,6 +16,14 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 TARGET_DIR="${HOME}"
 TS="$(date +%Y%m%d%H%M%S)"
 
+# Dependency check first — verify/install required and recommended tools
+# before any stowing happens. Continue even if it reports failures; the
+# command check below still gates the actual install.
+if [ -f "$SCRIPT_DIR/check_deps.sh" ]; then
+  bash "$SCRIPT_DIR/check_deps.sh" || echo "Warning: check_deps.sh reported failures; continuing." >&2
+  echo
+fi
+
 
 # ---------------------------------------------------------------------------
 # Platform detection — used to print install hints for missing commands
