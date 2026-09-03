@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # check_deps.sh — verify and (optionally) install required tools
 # Checks/installs: stow, find, sort, git, wget, fastfetch, mise, oh-my-posh,
-#                  brew, lsd, nvim, bat, btop, opencode, spf, cliamp,
+#                  brew, lsd, nvim, bat, btop, opencode, spf, cliamp, herdr, rustnet,
 #                  gh, gh-dash, neofetch, and ensures LazyVim.
 # Supports: macOS/Homebrew, Debian/Ubuntu (apt), Arch/Manjaro (paru > yay > pamac > pacman)
 
@@ -92,6 +92,13 @@ pacman_install() {
 }
 
 ensure_brew() {
+
+cargo_install() {
+  local crate="$1"
+  echo "Installing $crate via cargo..."
+  cargo install --locked "$crate"
+}
+
   if have brew; then
     return 0
   fi
@@ -141,6 +148,8 @@ need_cmd spf "superfile"
 need_cmd cliamp
 need_cmd gh
 need_cmd neofetch
+need_cmd herdr
+need_cmd rustnet
 
 # gh-dash is a gh extension — check via `gh extension list` rather than PATH
 missing_gh_dash=0
@@ -167,7 +176,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
 
     for cmd in "${missing[@]}"; do
       case "$cmd" in
-      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | cliamp | gh | neofetch)
+      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | cliamp | gh | neofetch | herdr | rustnet)
         case "$PKG" in
         brew)
           case "$cmd" in
@@ -183,6 +192,11 @@ if [ "${#missing[@]}" -gt 0 ]; then
           cliamp)
             echo "Installing 'cliamp' via Homebrew tap..."
             brew tap bjarneo/cliamp && brew_install bjarneo/cliamp/cliamp
+            ;;
+          herdr)    brew_install herdr ;;
+          rustnet)
+            echo "Installing 'rustnet' via Homebrew tap..."
+            brew tap domcyrus/rustnet && brew_install domcyrus/rustnet/rustnet
             ;;
           gh)       brew_install gh ;;
           neofetch) brew_install neofetch ;;
@@ -215,6 +229,13 @@ if [ "${#missing[@]}" -gt 0 ]; then
           cliamp)
             echo "Installing 'cliamp' via official script..."
             curl -fsSL https://raw.githubusercontent.com/bjarneo/cliamp/HEAD/install.sh | sh
+            ;;
+          herdr)
+            echo "Installing 'herdr' via official script..."
+            curl -fsSL https://herdr.dev/install.sh | sh
+            ;;
+          rustnet)
+            apt_install rustnet || cargo_install rustnet-monitor
             ;;
           gh)       apt_install gh ;;
           neofetch) apt_install neofetch ;;
@@ -274,6 +295,15 @@ if [ "${#missing[@]}" -gt 0 ]; then
             fi
             ;;
           gh)       pacman_install github-cli ;;
+          herdr)
+            pacman_install herdr-bin || {
+              echo "Installing 'herdr' via official script..."
+              curl -fsSL https://herdr.dev/install.sh | sh
+            }
+            ;;
+          rustnet)
+            pacman_install rustnet-bin || cargo_install rustnet-monitor
+            ;;
           neofetch) pacman_install neofetch ;;
           *)        pacman_install "$cmd" ;;
           esac

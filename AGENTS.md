@@ -168,6 +168,6 @@ require() {
 **Required:** `bash` (4+), `git`, `stow`, `find`, `sort`, `awk`
 
 **Recommended:** `mise`, `oh-my-posh`, `nvim` (LazyVim), `lsd`, `bat`, `lazygit`,
-`btop`, `fastfetch`
+`btop`, `fastfetch`, `rustnet`, `herdr`
 
 **Supported package managers:** Homebrew (macOS), apt (Debian/Ubuntu), Arch: `paru` > `yay` > `pamac` > `pacman`
