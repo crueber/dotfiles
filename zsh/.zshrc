@@ -13,10 +13,16 @@ export PATH="$PATH:$HOME/.bun/bin"
 
 eval "$(mise activate zsh)"
 
-# fastfetch on interactive logins (console or SSH) — not nested subshells,
-# not non-interactive sessions
-if [[ -o interactive && -o login && $- == *i* && -t 0 ]] && command -v fastfetch >/dev/null 2>&1; then
-  fastfetch
+# On interactive logins (console or SSH) — not nested subshells, not
+# non-interactive sessions: show fastfetch and self-update mise tools.
+if [[ -o interactive && -o login && $- == *i* && -t 0 ]]; then
+  command -v fastfetch >/dev/null 2>&1 && fastfetch
+
+  # Upgrade mise-managed tools when updates are available
+  if command -v mise >/dev/null 2>&1 && [[ -n "$(mise outdated 2>/dev/null)" ]]; then
+    echo "mise: updating outdated tools..."
+    mise upgrade --yes
+  fi
 fi
 
 
