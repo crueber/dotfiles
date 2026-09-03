@@ -69,8 +69,10 @@ brew_install() {
 apt_install() {
   local pkg="$1"
   echo "Installing $pkg via apt..."
-  sudo apt-get update -y
-  sudo apt-get install -y "$pkg"
+  if ! { sudo apt-get update -y && sudo apt-get install -y "$pkg"; }; then
+    echo "Error: apt install of '$pkg' failed (no sudo access in this terminal?)." >&2
+    return 1
+  fi
 }
 
 pacman_install() {
@@ -175,6 +177,8 @@ if [ "${#missing[@]}" -gt 0 ]; then
     fi
 
     for cmd in "${missing[@]}"; do
+      # One tool failing to install must not abort the whole run (set -e)
+      set +e
       case "$cmd" in
       stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | cliamp | gh | neofetch | herdr | rustnet)
         case "$PKG" in
@@ -340,6 +344,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
         echo "Unknown installer mapping for $cmd"
         ;;
       esac
+      set -e
     done
   fi
 else
