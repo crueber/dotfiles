@@ -13,7 +13,7 @@ dotfiles/
 ├── bin/          → ~/bin/           (utility scripts)
 ├── extras/                          (non-stow extras; gitignored)
 ├── git/          (NOT stowed; .gitconfig/.gitignore copied to ~/ if absent)
-├── config/       → ~/.config/       (app configs: lsd, htop, btop, opencode, tea, …)
+├── config/       → ~/.config/       (lsd, htop, btop, mise, opencode, nvim, …)
 ├── oh-my-posh/   → ~/.oh-my-posh/   (prompt themes)
 ├── zsh/          → ~/               (.zshrc, .zsh_aliases)
 ├── install.sh                       (stow all packages)
@@ -33,7 +33,7 @@ the inner `bin/` mirrors `~/bin/` so each script is symlinked individually.
 There is no build system or test suite. The primary commands are:
 
 ```bash
-# Install (stow all packages, auto-backup conflicts)
+# Install (runs check_deps.sh first, then stow all packages)
 ./install.sh
 
 # Remove all stow-managed symlinks
@@ -54,10 +54,10 @@ stow -d . -t "$HOME" -n -v <package>
 There are no lint, test, or format commands in this repo. `shellcheck` is the
 recommended tool for validating shell scripts if available.
 
----
-
-
----
+`install.sh` always runs `check_deps.sh` before stowing. `check_deps.sh` runs
+`mise install --yes` early (shims go on PATH) so mise-managed tools — including
+`omp` (oh-my-pi) and `opencode`, declared in `config/.config/mise/config.toml` —
+are present before the availability checks run.
 
 ## Adding a New Package
 
@@ -66,8 +66,9 @@ recommended tool for validating shell scripts if available.
 3. Run `./install.sh` — it discovers packages dynamically; no hardcoded list exists.
 4. Commit the new directory.
 
-Excluded directory names (never treated as stow packages): `.git`, `.svn`, `.hg`,
-`.github`, `.gitlab`, `node_modules`, `.stow`, `extras`.
+Excluded directory names (never treated as stow packages): `.git`, `git`, `.svn`,
+`.hg`, `.github`, `.gitlab`, `node_modules`, `.stow`, `extras`. The `git/` package
+is special: not stowed, its files copied only if the targets don't exist.
 
 ---
 
@@ -156,9 +157,16 @@ require() {
 ## Secrets and Machine-Specific Config
 
 - **Never commit secrets or machine-specific overrides** to this repo.
-- `.gitignore` excludes `*.zshrc.local`.
-- Machine-specific env vars, tokens, and path overrides go in `~/.zshrc.local`,
-  which is sourced automatically by `.zshrc` if it exists.
+- Gitignored local files: `~/.zshrc.local` (sourced by `.zshrc`),
+  `~/.gitconfig.local` (included by the repo `.gitconfig` for per-host auth:
+  Gitea CA certs, credential helpers), `config/.config/git/` (per-host
+  credential helpers/tokens/CAs), `config/.config/gh/hosts.yml`,
+  `config/.config/tea/`, `config/.config/collie/`,
+  `config/.config/systemd/`, `config/.config/go/telemetry/`, and
+  `**/node_modules/`.
+- A failed `git add -A` sweep previously nearly committed a GitHub oauth token
+  (`gh/hosts.yml`) and a Gitea token (`tea/config.yml`). Always re-scan staged
+  diffs for secrets before committing.
 - `check_deps.sh` reads `$GH_TOKEN` from the environment — never hardcode it.
 
 ---

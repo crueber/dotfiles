@@ -25,7 +25,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [lazygit](https://github.com/jesseduffield/lazygit) | Terminal UI for git |
 | [btop](https://github.com/aristocratos/btop) | System monitor |
 | [fastfetch](https://github.com/fastfetch-cli/fastfetch) | System info display |
-| [opencode](https://opencode.ai) | AI coding assistant (aliased via opentmux) |
+| [opencode](https://opencode.ai) | AI coding assistant |
 | [superfile](https://superfile.netlify.app/) | Terminal file manager (`spf`) |
 | [cliamp](https://github.com/bjarneo/cliamp) | Retro terminal music player |
 | [rustnet](https://github.com/domcyrus/rustnet) | Network monitoring TUI |
@@ -41,7 +41,7 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [LM Studio](https://lmstudio.ai) | Local LLM runner (macOS only; path configured in `.zshrc`) |
 | Java (Temurin 17) | `JAVA_HOME` configured in `.zshrc` on macOS |
 
-`install.sh` runs `check_deps.sh` automatically before stowing. You can also run it standalone:
+**`check_deps.sh`** verifies what is and isn't installed and can install missing tools automatically. `install.sh` runs it automatically before stowing; you can also run it standalone:
 
 ## Installation
 
@@ -111,7 +111,7 @@ Checks for all required and recommended tools. Detects the available package man
 ### `zsh/`
 
 - **`.zshrc`** — Initializes oh-my-posh with the `blue-owl-custom` theme, activates mise, sets `EDITOR`/`VISUAL` to nvim, configures PATH for `~/bin`, LM Studio, and opencode.
-- **`.zsh_aliases`** — Shell aliases: `ls=lsd`, `vim=nvim`, `n=nvim`, `cat=bat`, `ll="ls -al"`, `..="cd .."`, `lg=lazygit`
+- **`.zsh_aliases`** — `vim`/`n` → `nvim`, `ll`, `..`, `...` are always set; `ls=lsd`, `lg=lazygit`, and `tea=tea-cli` only when the tool exists on the system.
 
 **Local overrides:** Create `~/.zshrc.local` for machine-specific settings (tokens, private paths, etc.). It is sourced automatically if it exists and is excluded from git via `.gitignore`.
 
@@ -141,7 +141,7 @@ To switch themes, update the `--config` path in `zsh/.zshrc`.
 
 ### `config/`
 
-Mirrors `~/.config`. In addition to lsd (`config.yaml` enables color always with a custom theme; `colors.yml` is the 256-color palette), it carries configs for htop, btop, lazygit, tea, opencode, and more. Machine-specific git credential helpers/tokens under `.config/git/` are gitignored.
+Mirrors `~/.config`. In addition to lsd (`config.yaml` enables color always with a custom theme; `colors.yml` is the 256-color palette), it carries configs for htop, btop, lazygit, mise (runtime tool declarations incl. `oh-my-pi`/`omp` and `opencode`), opencode, and the `nvim/` LazyVim config. Machine-specific or secret-bearing paths are gitignored: git credential helpers (`.config/git/`), gh `hosts.yml`, tea, systemd user units, go telemetry.
 
 ### `bin/`
 
