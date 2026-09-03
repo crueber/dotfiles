@@ -13,6 +13,12 @@ export PATH="$PATH:$HOME/.bun/bin"
 
 eval "$(mise activate zsh)"
 
+# fastfetch on interactive logins (console or SSH) — not nested subshells,
+# not non-interactive sessions
+if [[ -o interactive && -o login && $- == *i* && -t 0 ]] && command -v fastfetch >/dev/null 2>&1; then
+  fastfetch
+fi
+
 
 # opencode
 export PATH=$HOME/.opencode/bin:$PATH

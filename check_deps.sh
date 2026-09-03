@@ -2,7 +2,7 @@
 # check_deps.sh — verify and (optionally) install required tools
 # Checks/installs: stow, find, sort, git, wget, fastfetch, mise, oh-my-posh,
 #                  brew, lsd, nvim, bat, btop, opencode, spf, tea, herdr, rustnet,
-#                  gh, gh-dash, neofetch, and ensures LazyVim.
+#                  gh, gh-dash, and ensures LazyVim.
 # Supports: macOS/Homebrew, Debian/Ubuntu (apt), Arch/Manjaro (paru > yay > pamac > pacman)
 
 set -euo pipefail
@@ -162,7 +162,6 @@ else
   printf "MISS %-12s\n" "tea"
   missing+=("tea")
 fi
-need_cmd neofetch
 need_cmd herdr
 need_cmd rustnet
 
@@ -193,7 +192,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
       # One tool failing to install must not abort the whole run (set -e)
       set +e
       case "$cmd" in
-      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | tea | gh | neofetch | herdr | rustnet | omp)
+      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | tea | gh | herdr | rustnet | omp)
         case "$PKG" in
         brew)
           case "$cmd" in
@@ -213,7 +212,6 @@ if [ "${#missing[@]}" -gt 0 ]; then
             brew tap domcyrus/rustnet && brew_install domcyrus/rustnet/rustnet
             ;;
           gh)       brew_install gh ;;
-          neofetch) brew_install neofetch ;;
           *)        brew_install "$cmd" ;;
           esac
           ;;
@@ -251,7 +249,6 @@ if [ "${#missing[@]}" -gt 0 ]; then
             apt_install rustnet || cargo_install rustnet-monitor
             ;;
           gh)       apt_install gh ;;
-          neofetch) apt_install neofetch ;;
           *)        apt_install "$cmd" ;;
           esac
           ;;
@@ -312,7 +309,6 @@ if [ "${#missing[@]}" -gt 0 ]; then
           rustnet)
             pacman_install rustnet-bin || cargo_install rustnet-monitor
             ;;
-          neofetch) pacman_install neofetch ;;
           *)        pacman_install "$cmd" ;;
           esac
           ;;

@@ -31,7 +31,6 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [herdr](https://herdr.dev) | Terminal workspace manager for AI coding agents |
 | [tea](https://gitea.com/gitea/tea) | Gitea CLI (`tea-cli` on Debian/Ubuntu) |
 | [gh-dash](https://github.com/dlvhdr/gh-dash) | GitHub dashboard TUI (gh extension) |
-| [neofetch](https://github.com/dylanaraps/neofetch) | System info display |
 
 
 **`check_deps.sh`** verifies what is and isn't installed and can install missing tools automatically. `install.sh` runs it automatically before stowing; you can also run it standalone:
