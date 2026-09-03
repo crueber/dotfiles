@@ -1,8 +1,10 @@
-alias ls=lsd
 alias vim=nvim
 alias n=nvim
 alias ll="ls -al"
 alias ".."="cd .."
 alias "..."="cd ../.."
-alias lg=lazygit
-alias tea=tea-cli
+
+# Tool aliases only when the tool exists
+command -v lsd >/dev/null 2>&1 && alias ls=lsd
+command -v lazygit >/dev/null 2>&1 && alias lg=lazygit
+command -v tea-cli >/dev/null 2>&1 && alias tea=tea-cli
