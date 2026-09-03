@@ -6,6 +6,7 @@ gradle = "latest"
 kotlin = { version = "latest", asset_pattern = "kotlin-compiler-*.zip", bin_path = "kotlinc/bin" }
 node = "latest"
 oh-my-pi = "latest"
+hunk = "latest"
 opencode = "latest"
 python = "latest"
 ruby = "latest"
