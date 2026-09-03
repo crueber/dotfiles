@@ -122,6 +122,7 @@ cargo_install() {
 # mise-managed tools (omp, opencode, runtimes, …) are installed up front so the
 # checks below can see them via mise's shims.
 if have mise; then
+  MISE_AT_START=1
   export PATH="$HOME/.local/share/mise/shims:$PATH"
   echo "Syncing mise tools from ~/.config/mise/config.toml..."
   mise install --yes || echo "Warning: mise install failed." >&2
@@ -349,7 +350,17 @@ if [ "${#missing[@]}" -gt 0 ]; then
       esac
       set -e
     done
-  fi
+
+    # If mise itself was just installed by the loop above, its tools were not
+    # synced at the start — sync them now and put the shims on PATH so
+    # everything installed is immediately usable.
+    if [ "${MISE_AT_START:-0}" -eq 0 ] && have mise; then
+      export PATH="$HOME/.local/share/mise/shims:$PATH"
+      echo
+      echo "Syncing mise tools from ~/.config/mise/config.toml..."
+      mise install --yes || echo "Warning: mise install failed." >&2
+    fi
+   fi
 else
   echo "All base commands present."
 fi
