@@ -10,12 +10,8 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$PATH:$HOME/bin"
 export PATH="$PATH:$HOME/.bun/bin"
 
-# Added by LM Studio CLI (lms) — macOS only
-[[ "$(uname)" == "Darwin" ]] && export PATH="$PATH:$HOME/.lmstudio/bin"
-# End of LM Studio CLI section
 
 eval "$(mise activate zsh)"
-[[ "$(uname)" == "Darwin" ]] && export JAVA_HOME="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"
 
 
 # opencode

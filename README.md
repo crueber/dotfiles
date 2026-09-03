@@ -27,19 +27,12 @@ Personal dotfiles managed with [GNU Stow](https://www.gnu.org/software/stow/). E
 | [fastfetch](https://github.com/fastfetch-cli/fastfetch) | System info display |
 | [opencode](https://opencode.ai) | AI coding assistant |
 | [superfile](https://superfile.netlify.app/) | Terminal file manager (`spf`) |
-| [cliamp](https://github.com/bjarneo/cliamp) | Retro terminal music player |
 | [rustnet](https://github.com/domcyrus/rustnet) | Network monitoring TUI |
 | [herdr](https://herdr.dev) | Terminal workspace manager for AI coding agents |
-| [gh](https://cli.github.com/) | GitHub CLI |
+| [tea](https://gitea.com/gitea/tea) | Gitea CLI (`tea-cli` on Debian/Ubuntu) |
 | [gh-dash](https://github.com/dlvhdr/gh-dash) | GitHub dashboard TUI (gh extension) |
 | [neofetch](https://github.com/dylanaraps/neofetch) | System info display |
 
-### Optional
-
-| Tool | Purpose |
-|------|---------|
-| [LM Studio](https://lmstudio.ai) | Local LLM runner (macOS only; path configured in `.zshrc`) |
-| Java (Temurin 17) | `JAVA_HOME` configured in `.zshrc` on macOS |
 
 **`check_deps.sh`** verifies what is and isn't installed and can install missing tools automatically. `install.sh` runs it automatically before stowing; you can also run it standalone:
 
@@ -110,8 +103,8 @@ Checks for all required and recommended tools. Detects the available package man
 
 ### `zsh/`
 
-- **`.zshrc`** — Initializes oh-my-posh with the `blue-owl-custom` theme, activates mise, sets `EDITOR`/`VISUAL` to nvim, configures PATH for `~/bin`, LM Studio, and opencode.
-- **`.zsh_aliases`** — `vim`/`n` → `nvim`, `ll`, `..`, `...` are always set; `ls=lsd`, `lg=lazygit`, and `tea=tea-cli` only when the tool exists on the system.
+- **`.zshrc`** — Initializes oh-my-posh with the `blue-owl-custom` theme, activates mise, sets `EDITOR`/`VISUAL` to nvim, configures PATH for `~/bin` and opencode.
+- **`.zsh_aliases`** — `vim`/`n` → `nvim`, `ll`, `..`, `...` are always set; `ls=lsd`, `lg=lazygit`, and `tea=tea-cli` only when the tool exists; `bat=batcat` only when `batcat` exists and `bat` doesn't (Debian/Ubuntu).
 
 **Local overrides:** Create `~/.zshrc.local` for machine-specific settings (tokens, private paths, etc.). It is sourced automatically if it exists and is excluded from git via `.gitignore`.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # check_deps.sh — verify and (optionally) install required tools
 # Checks/installs: stow, find, sort, git, wget, fastfetch, mise, oh-my-posh,
-#                  brew, lsd, nvim, bat, btop, opencode, spf, cliamp, herdr, rustnet,
+#                  brew, lsd, nvim, bat, btop, opencode, spf, tea, herdr, rustnet,
 #                  gh, gh-dash, neofetch, and ensures LazyVim.
 # Supports: macOS/Homebrew, Debian/Ubuntu (apt), Arch/Manjaro (paru > yay > pamac > pacman)
 
@@ -156,8 +156,12 @@ need_cmd bat
 need_cmd btop
 need_cmd opencode
 need_cmd spf "superfile"
-need_cmd cliamp
-need_cmd gh
+if have tea-cli || have tea; then
+  printf "OK   %-12s -> %s\n" "tea" "$(command -v tea-cli || command -v tea)"
+else
+  printf "MISS %-12s\n" "tea"
+  missing+=("tea")
+fi
 need_cmd neofetch
 need_cmd herdr
 need_cmd rustnet
@@ -189,7 +193,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
       # One tool failing to install must not abort the whole run (set -e)
       set +e
       case "$cmd" in
-      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | cliamp | gh | neofetch | herdr | rustnet | omp)
+      stow | git | wget | lsd | nvim | bat | btop | fastfetch | mise | oh-my-posh | opencode | spf | tea | gh | neofetch | herdr | rustnet | omp)
         case "$PKG" in
         brew)
           case "$cmd" in
@@ -202,10 +206,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
           oh-my-posh) brew_install oh-my-posh ;;
           opencode) brew_install opencode ;;
           spf)      brew_install superfile ;;
-          cliamp)
-            echo "Installing 'cliamp' via Homebrew tap..."
-            brew tap bjarneo/cliamp && brew_install bjarneo/cliamp/cliamp
-            ;;
+          tea)      brew_install tea ;;
           herdr)    brew_install herdr ;;
           rustnet)
             echo "Installing 'rustnet' via Homebrew tap..."
@@ -239,9 +240,8 @@ if [ "${#missing[@]}" -gt 0 ]; then
             echo "Installing 'superfile' via official script..."
             curl -fsSL https://superfile.netlify.app/install.sh | bash
             ;;
-          cliamp)
-            echo "Installing 'cliamp' via official script..."
-            curl -fsSL https://raw.githubusercontent.com/bjarneo/cliamp/HEAD/install.sh | sh
+          tea)
+            apt_install tea-cli
             ;;
           herdr)
             echo "Installing 'herdr' via official script..."
@@ -298,14 +298,9 @@ if [ "${#missing[@]}" -gt 0 ]; then
               curl -fsSL https://superfile.netlify.app/install.sh | bash
             fi
             ;;
-          cliamp)
-            # cliamp is in the AUR
-            if [ "$AUR_HELPER" != "pacman" ]; then
-              pacman_install cliamp
-            else
-              echo "Installing 'cliamp' via official script..."
-              curl -fsSL https://raw.githubusercontent.com/bjarneo/cliamp/HEAD/install.sh | sh
-            fi
+          tea)
+            # tea is in the AUR; gitea-tea-git is the source-built alternative
+            pacman_install tea || pacman_install gitea-tea-git
             ;;
           gh)       pacman_install github-cli ;;
           herdr)
