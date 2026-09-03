@@ -1,12 +1,6 @@
 alias ls=lsd
 alias vim=nvim
 alias n=nvim
-# bat is 'batcat' on Debian/Ubuntu; prefer bat if both exist
-if command -v bat &>/dev/null; then
-  alias cat=bat
-elif command -v batcat &>/dev/null; then
-  alias cat=batcat
-fi
 alias ll="ls -al"
 alias ".."="cd .."
 alias "..."="cd ../.."
