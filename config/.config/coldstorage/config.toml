@@ -1,0 +1,55 @@
+roots = ["~/Projects", "~/dev/github.com"]
+max_depth = 4
+follow_nested_repos = false
+follow_symlinks = false
+exclude = []
+prune = []
+
+[refresh]
+  interval = "5m"
+  watch = true
+  debounce = "1s"
+
+[status]
+  untracked = "normal"
+  max_files = 200
+  max_age = "1h"
+
+[remote]
+  fetch = false
+  interval = "1h"
+  concurrency = 4
+  timeout = "20s"
+
+[visibility]
+  enabled = false
+  interval = "24h"
+  concurrency = 4
+  timeout = "10s"
+
+[release]
+  tag_pattern = "*[0-9]*"
+  max_subjects = 30
+  read_changelog = true
+  changelog_files = ["CHANGELOG.md", "CHANGELOG", "changelog.md"]
+
+[ui]
+  default_filters = []
+  default_sort = "activity"
+  default_since = ""
+  editor_command = ["zed", "{path}"]
+  git_client_command = []
+  file_manager_command = []
+  terminal_command = [""]
+
+[[orgs]]
+  provider = "github"
+  host = "github.com"
+  owner = "crueber"
+  path = "~/dev/github.com/crueber"
+  login = ""
+  protocol = "ssh"
+  include_forks = false
+  include_archived = false
+  include_subgroups = false
+  enabled = true
