@@ -47,6 +47,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main'
+    # Privileged job container: buildah needs user namespaces for bud.
+    # node:20-bookworm keeps node-based actions (checkout) working.
+    container:
+      image: node:20-bookworm
+      options: --privileged
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -92,8 +97,10 @@ jobs:
   daemon socket (`/var/run/docker.sock`) in jobs, so a docker CLI alone
   fails with `Cannot connect to the Docker daemon`. Build daemonless with
   buildah (vfs driver) per the template.
-- Images land in the Forgejo package (container) registry at
-  `git.packden.us/<owner>/<repo>:<tag>`.
+- `buildah bud` needs user namespaces: without them it fails with
+  `Error during unshare(CLONE_NEWUSER): Operation not permitted`. The fix
+  is a privileged job container (`container: image: node:20-bookworm` keeps
+  node-based actions working; `options: --privileged` allows unshare).
 
 ## 4. Secrets
 
