@@ -47,11 +47,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.ref == 'refs/heads/main'
-    # Privileged job container: buildah needs user namespaces for bud.
-    # node:20-bookworm keeps node-based actions (checkout) working.
-    container:
-      image: node:20-bookworm
-      options: --privileged
+    # Job containers get --cap-add SYS_ADMIN from RUNNER config (workflow
+    # container.options is ignored by runner v13.2.1); buildah needs it.
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -81,6 +78,19 @@ jobs:
 
 ## 3. Hard rules
 
+- Root cause of `unshare(CLONE_NEWUSER): Operation not permitted` (lab admin,
+  2026-11-09): Docker's default seccomp profile permits `clone(CLONE_NEWUSER)`
+  only with `CAP_SYS_ADMIN`, so it is the JOB container's own seccomp profile —
+  not the kernel, not AppArmor, not the runner container (job containers are
+  host siblings via the mounted docker.sock, so runner-container flags can't
+  help). Fix lives in runner config: `container.options: "--cap-add SYS_ADMIN"`
+  (narrowest working set; no `seccomp=unconfined`, no `--privileged`). Ruled
+  out: sysctls (`unprivileged_userns_clone=1`, bare-host `unshare -U` fine),
+  workflow-YAML `container.options` (ignored by runner v13.2.1).
+- Sanity check must include the cap:
+  `docker run --rm --cap-add SYS_ADMIN node:20-bookworm unshare -U true`.
+  Plain `unshare -U` still fails and proves nothing.
+
 - Contexts are `github.*` (`github.ref`, `github.sha`). `gitea.*` fails
   schema validation: `Unknown Variable Access gitea`, `workflow file is not
   usable`. The docker `/*` JS actions (`login-action`, `build-push-action`)
@@ -99,8 +109,9 @@ jobs:
   buildah (vfs driver) per the template.
 - `buildah bud` needs user namespaces: without them it fails with
   `Error during unshare(CLONE_NEWUSER): Operation not permitted`. The fix
-  is a privileged job container (`container: image: node:20-bookworm` keeps
-  node-based actions working; `options: --privileged` allows unshare).
+  is `--cap-add SYS_ADMIN` on the JOB container via runner config (see §3) —
+  not a privileged job container (runner v13.2.1 ignores workflow
+  `container.options`, verified in job logs).
 
 ## 4. Secrets
 
