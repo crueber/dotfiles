@@ -56,9 +56,9 @@ jobs:
         run: |
           if ! command -v buildah >/dev/null; then
             apt-get update && apt-get install -y buildah
-            mkdir -p /etc/containers
-            printf '[storage]\ndriver="vfs"\n' > /etc/containers/storage.conf
           fi
+          mkdir -p /etc/containers /var/lib/containers /var/tmp/containers
+          printf '[storage]\ndriver="vfs"\nrunroot="/var/tmp/containers"\ngraphroot="/var/lib/containers"\n' > /etc/containers/storage.conf
           buildah --version
       - name: Build image
         run: |
