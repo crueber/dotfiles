@@ -99,8 +99,11 @@ jobs:
 - Write steps expanded (`- name:` / `uses:` / `run:` / `with:` on own lines),
   not flow-style (`- {uses: ...}`). The parser is picky; expanded form matches
   known-good workflows (e.g. freedom-maps).
-- `go.mod` floor must fit available toolchains: `golang:1.27-alpine` ships
-  go 1.27.1, so `go 1.27.3` in go.mod breaks local `docker build`. Keep the
+- Buildah needs fully-qualified base images (`docker.io/library/golang:...`,
+  not short names): no unqualified-search registries are configured, so short
+  names fail with `did not resolve to an alias`.
+- `go.mod` floor must fit the Dockerfile toolchain: `golang:1.27-alpine`
+  ships go 1.27.1, so `go 1.27.3` in go.mod breaks `docker build`. Keep the
   floor at `go 1.27` (runner installs 1.27.3 via setup-go, fine either way).
 - Do NOT `apt-get install docker.io` in the job container: it drags a daemon,
   iptables and dbus and fails on post-install triggers. There is also NO
