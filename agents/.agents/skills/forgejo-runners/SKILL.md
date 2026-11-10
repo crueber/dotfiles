@@ -90,6 +90,10 @@ jobs:
 - Sanity check must include the cap:
   `docker run --rm --cap-add SYS_ADMIN node:20-bookworm unshare -U true`.
   Plain `unshare -U` still fails and proves nothing.
+- 2026-11-10: with CAP_SYS_ADMIN, buildah pulls layers then fails applying
+  the golang image with `remount /, flags: 0x44000: permission denied`
+  (ApplyLayer). Suspected AppArmor mount denial in job containers — with lab
+  admin for targeted widening. Next step unknown until they answer.
 
 - Contexts are `github.*` (`github.ref`, `github.sha`). `gitea.*` fails
   schema validation: `Unknown Variable Access gitea`, `workflow file is not
