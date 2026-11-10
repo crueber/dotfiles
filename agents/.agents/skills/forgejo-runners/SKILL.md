@@ -129,6 +129,9 @@ jobs:
 
 - Repo-level: `tea actions secrets add --repo owner/repo NAME` (values are
   never listed back; `tea actions secrets list` shows names only).
+  Account-level secrets also resolve as `secrets.*` in repos (verified
+  2026-11-10: `REGISTRY_USER`/`REGISTRY_PASSWORD` set at account level were
+  picked up by `crueber/roundtable` release and pushed `:latest`).
 - The `release` template pushes only when `REGISTRY_USER`/`REGISTRY_PASSWORD`
   exist; otherwise it logs `skipping push` and stays green. Ask the operator
   to add them (user can add at account level per 2026-11-09; repo-level is the
