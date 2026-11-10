@@ -94,6 +94,11 @@ jobs:
   the golang image with `remount /, flags: 0x44000: permission denied`
   (ApplyLayer). Suspected AppArmor mount denial in job containers — with lab
   admin for targeted widening. Next step unknown until they answer.
+- 2026-11-10: admin set `--cap-add SYS_ADMIN --security-opt
+  apparmor=unconfined --ulimit nofile=1048576:1048576` on all four runners
+  (verified: unshare, rprivate mount, nofile, real vfs build green). Then RUN
+  steps failed with `create keyring: Operation not permitted` (crun) — fixed
+  in-workflow with `buildah bud --isolation=chroot`, no admin change needed.
 
 - Contexts are `github.*` (`github.ref`, `github.sha`). `gitea.*` fails
   schema validation: `Unknown Variable Access gitea`, `workflow file is not
